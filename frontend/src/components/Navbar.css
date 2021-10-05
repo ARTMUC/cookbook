@@ -1,50 +1,48 @@
-*{
-    margin:0;
-    padding:0;
-    border:0;
-    outline:0;
-    font-size:100%;
-    vertical-align:baseline;
-    background:transparent;
-  }
-  
-  
-  
-  .header {
-    /* Stick to the top */
-    position: sticky;
-    top: 0;
-  background-color:black;
-  }
-  .container {
-    /* Content is centered horizontally */
-    align-items: center;
-    display: flex;
-  
-    /* Reset styles */
-    list-style-type: none;
-    margin: 0;
-  }
-  
-  .container__item--right {
-    /* Sticks to the right */
-    margin-left: auto;
-  }
-  
-  .container__item--center {
-    /* Sticks to the right */
-    margin: auto;
-  }
-  
-  .container__item--logo {
-    /* Sticks to the right */
-    margin-right: auto;
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  background: transparent;
+}
+
+.header {
+ 
+
+  top: 0;
+  background-color: black;
+}
+.container {
+  /* Content is centered horizontally */
+  align-items: center;
+  display: flex;
+
+  /* Reset styles */
+  list-style-type: none;
+  margin: 0;
+}
+
+.container__item--right {
+  /* Sticks to the right */
+  margin-left: auto;
+}
+
+.container__item--center {
+  /* Sticks to the right */
+  margin: auto;
+}
+
+.container__item--logo {
+  /* Sticks to the right */
+  margin-right: auto;
   width: 150px;
   height: auto;
-  color: white
-  }
-  
-  .button {
+  color: white;
+}
+
+.button {
   border: none;
   color: white;
   padding: 16px 32px;
@@ -55,18 +53,15 @@
   margin: 4px 2px;
   transition-duration: 0.4s;
   cursor: pointer;
-  }
-  
-  .button1 {
-  background-color: black; 
-  color: white; 
+}
+
+.button1 {
+  background-color: black;
+  color: white;
   border: 2px solid white;
-  }
-  
-  .button1:hover {
+}
+
+.button1:hover {
   background-color: white;
   color: black;
-  }
-  
-  
-
+}
