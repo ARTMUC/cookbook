@@ -1,16 +1,18 @@
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
+const nodeMailer = require('../config/nodemailer')
 
 const register = async (req, res) => {
-  const { email: username, password } = req.body;
+  const { email, password } = req.body;
 
-  User.findOne({ username }, async (err, doc) => {
+  User.findOne({ email }, async (err, doc) => {
     try {
       if (doc) res.send("User Already Exists");
       if (!doc) {
+        nodeMailer(email) // add random url generator, add this value to DB, send the value thru email, add new route to verify email adress
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = new User({
-          username,
+         email:  email,
           password: hashedPassword,
         });
         await newUser.save((err) => {
@@ -29,6 +31,15 @@ const register = async (req, res) => {
   });
 };
 
+
+
+const login = async (req, res) => {
+  res.send("success");
+};
+
+
+
+
 const logout = async (req, res) => {
   req.logout();
   res.send("success");
@@ -36,5 +47,6 @@ const logout = async (req, res) => {
 
 module.exports = {
   register,
+  login,
   logout,
 };

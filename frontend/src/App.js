@@ -13,15 +13,17 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 function App() {
   return (
     <Router>
+      <div> 
       <div>
         <Navbar />
       </div>
-      <main>
+      <main className='container--text'>
         <Switch>
           <Route exact path="/" component={HomeScreen} />
           <Route exact path="/user-screen" component={UserScreen} />
         </Switch>
       </main>
+      </div>
     </Router>
   );
 }

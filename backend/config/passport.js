@@ -6,9 +6,14 @@ const bcrypt = require("bcryptjs");
 
 module.exports = () => {
 
+ 
     passport.use(
-        new LocalStrategy((username, password, done) => {
-          User.findOne({ username: username }, (err, user) => {
+        new LocalStrategy({
+          usernameField: 'email',
+        //  passwordField: 'passwd',
+         
+        },(email, password, done) => {
+          User.findOne({ email: email }, (err, user) => {
             if (err) throw err;
             if (!user) return done(null, false);
             bcrypt.compare(password, user.password, (err, result) => {
@@ -30,7 +35,7 @@ module.exports = () => {
       passport.deserializeUser((id, cb) => {
         User.findOne({ _id: id }, (err, user) => {
           const userInformation = {
-            username: user.username,
+            email: user.email,
             // isAdmin: user.isAdmin,
             id: user._id,
           };

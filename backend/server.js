@@ -25,7 +25,7 @@ app.use(express.json());
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 app.use(
   session({
-    secret: "secretcode",
+    secret: "secretcode", // need to move to the .env file!!!!!!!!!!!!!!!!!!!!!!!!!
     resave: true,
     saveUninitialized: true,
   })

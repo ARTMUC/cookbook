@@ -9,13 +9,14 @@
 }
 
 .header {
- 
-
+ position: fixed;
+width:100%;
   top: 0;
   background-color: black;
 }
 .container {
   /* Content is centered horizontally */
+ 
   align-items: center;
   display: flex;
 
