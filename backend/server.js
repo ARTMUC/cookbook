@@ -4,7 +4,13 @@ const passport = require("passport");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 
+const ensureLoggedIn = require("connect-ensure-login").ensureLoggedIn; // another package that works with passport - ensures user is logged in
+
 require("dotenv").config();
+
+//custom middleware
+
+const isEmailConfirmed = require("./middleware/isEmailConfirmed");
 
 // routers
 const authRouter = require("./routes/auth");
@@ -38,6 +44,7 @@ passport.initialize() middleware. If your application uses persistent login sess
 (recommended, but not required), passport.session() middleware must also be used.
 */
 app.use(passport.initialize());
+
 app.use(passport.session());
 
 (async () => {
@@ -50,7 +57,7 @@ app.use(passport.session());
 })();
 
 // routes
-app.get("/", (req, res) => {
+app.get("/", ensureLoggedIn(), isEmailConfirmed, (req, res) => {
   res.send("Hello World!");
 });
 

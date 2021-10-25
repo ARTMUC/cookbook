@@ -36,7 +36,7 @@ module.exports = () => {
         User.findOne({ _id: id }, (err, user) => {
           const userInformation = {
             email: user.email,
-            // isAdmin: user.isAdmin,
+            isEmailConfirmed: user.isEmailConfirmed,
             id: user._id,
           };
           cb(err, userInformation);

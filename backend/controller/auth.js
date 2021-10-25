@@ -1,25 +1,38 @@
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
-const nodeMailer = require('../config/nodemailer')
+const nodeMailer = require("../config/nodemailer");
+const { randomBytes } = require("crypto");
+const { promisify } = require("util");
+
+const rndmBytes = promisify(randomBytes);
 
 const register = async (req, res) => {
   const { email, password } = req.body;
-
-  User.findOne({ email }, async (err, doc) => {
     try {
+      const doc = await User.findOne({ email })
       if (doc) res.send("User Already Exists");
       if (!doc) {
-        nodeMailer(email) // add random url generator, add this value to DB, send the value thru email, add new route to verify email adress
+        const randomValue = await rndmBytes(16);
+        const randomString = randomValue.toString("hex");
+
+        const emailText = `localhost:5000/api/v1/auth/confirm/${randomString}`;
+        const emailHTML = `<a href=\"http://localhost:5000/api/v1/auth/confirm/${randomString}\">Hello ${email} click here to confirm email </a>`;
+        const emailSubject = "CookBook - please confirm your email ✔";
+
+        nodeMailer(email, emailText, emailHTML, emailSubject); // add random url generator, add this value to DB, send the value thru email, add new route to verify email adress
         const hashedPassword = await bcrypt.hash(password, 10);
+
         const newUser = new User({
-         email:  email,
+          email: email,
           password: hashedPassword,
+          isEmailConfirmed: false,
+          confirmation_Id: randomString,
         });
         await newUser.save((err) => {
           if (err) {
             res.send(err.message);
           } else {
-            res.send("success");
+            res.send("Check your inbox. We've sent you email with confirmation link."); // tutaj wsadzic send mail - w body musze miec tez id uzytkownika zeby latwo bylo szukac go w bazie danych
           }
         });
       }
@@ -28,25 +41,44 @@ const register = async (req, res) => {
       res.send("err");
       return;
     }
-  });
+ 
 };
-
-
 
 const login = async (req, res) => {
+  res.send("success"); // login function is taken care of by passport.js entirerly ... don't bother with this for now
+};
+
+const logout = async (req, res) => {
+  req.logout(); // logout function is taken care of by passport.js entirerly ... don't bother with this for now
   res.send("success");
 };
 
+const confirm = async (req, res) => {
+  const receivedConfirmationId = `${req.params.no}`;
 
+  try {
+    const doc = await User.findOneAndUpdate(
+      { confirmation_Id: receivedConfirmationId },
+      { isEmailConfirmed: true }
+    );
 
-
-const logout = async (req, res) => {
-  req.logout();
-  res.send("success");
+    if (!doc)
+      res.send(
+        "Your confirmation link doesn't work. Please contact Administartor."
+      );
+    if (doc) {
+      res.send("email confirmed");
+    }
+  } catch (error) {
+    console.log(error);
+    res.send("err");
+    return;
+  }
 };
 
 module.exports = {
   register,
   login,
   logout,
+  confirm,
 };

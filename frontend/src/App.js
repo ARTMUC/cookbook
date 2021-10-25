@@ -13,7 +13,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 function App() {
   return (
     <Router>
-      <div> 
+     
       <div>
         <Navbar />
       </div>
@@ -23,7 +23,7 @@ function App() {
           <Route exact path="/user-screen" component={UserScreen} />
         </Switch>
       </main>
-      </div>
+   
     </Router>
   );
 }

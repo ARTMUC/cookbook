@@ -17,6 +17,19 @@ const UserSchema = new mongoose.Schema({
     required: [true, 'Please provide password'],
     minlength: 6,
   },
+
+  isEmailConfirmed: { 
+    type : Boolean,
+    required: true,
+
+  },
+  confirmation_Id: {
+    type: String,
+    required: true,
+    minlength: 6,
+  }, 
+
+
 })
 
 
