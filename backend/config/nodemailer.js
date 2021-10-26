@@ -17,10 +17,10 @@ module.exports = (reiceiverEmail, emailText, emailHTML, emailSubject) => {
     });
 
     let info = await transporter.sendMail({
-      from: '"cookBook" <artmuc@outlook.com>', // sender address
+      from: '"cookBook" <artmuc@outlook.com>', 
      // to: `${reiceiverEmail}`, // list of receivers
        to: "artmuc911@gmail.com", // temporary!!!!!!!!!!!!!!!
-      subject: emailSubject, // Subject line
+      subject: emailSubject, 
       text: emailText , 
       html: emailHTML, 
     });

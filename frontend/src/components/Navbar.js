@@ -6,29 +6,46 @@ import { useState } from "react";
 
 function Navbar() {
   return (
-    <div className="App">
-      <div>
-        <header className="header">
-          <ul className="container">
-            <SiCodechef className="container__item--logo" />
+    <div>
+      <div className="App">
+        <div>
+          <header className="header">
+            <ul className="container">
+              <SiCodechef className="container__item--logo" />
 
-            <li className="container__item--center">
-              <a className="button button1" href="/">
-                home screen
-              </a>
+              <div className="container__item--center">
+                <li>
+                  <a className="button button2" href="/home-screen">
+                    home screen
+                  </a>
+                </li>
 
-              <a className="button button1" href="/user-screen">
-                user screen
-              </a>
-            </li>
+                <li>
+                  <a className="button button2" href="/user-screen">
+                    user screen
+                  </a>
+                </li>
 
-            <li className="container__item--right">
-              <a className="button button1" href="https://www.google.com">
-                google it
-              </a>
-            </li>
-          </ul>
-        </header>
+                <li>
+                  <a className="button button2" href="/login-screen">
+                    login screen
+                  </a>
+                </li>
+
+                <li>
+                  <a className="button button2" href="/register-screen">
+                    register screen
+                  </a>
+                </li>
+              </div>
+              <li className="container__item--right">
+                <a className="button " href="https://www.google.com">
+                  google it
+                </a>
+              </li>
+            </ul>
+          </header>
+        </div>
       </div>
     </div>
   );
