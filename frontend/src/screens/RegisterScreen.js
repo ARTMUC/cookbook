@@ -7,7 +7,8 @@ function RegisterScreen() {
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const [isMessageShown, setIsMessageShown] = useState(false);
-  const [message, setMessage] = useState('')
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState("");
 
   const handleEmailChange = (e) => {
     e.preventDefault();
@@ -28,9 +29,10 @@ function RegisterScreen() {
   };
 
   const handleRegister = async (e) => {
-
-    if(password === repeatPassword) {
-
+    setIsMessageShown(false)
+    setIsLoading(true)
+    
+    if (password === repeatPassword) {
       e.preventDefault();
       let r = await fetch("http://localhost:5000/api/v1/auth/register", {
         method: "POST",
@@ -38,28 +40,26 @@ function RegisterScreen() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email: email, password: password }),
-        
       });
       setMessage(await r.json());
-    } else {console.log('type your password again')}
-  
-    setEmail('');
-    setPassword('');
-    setRepeatPassword('');
+      setIsLoading(false)
+    } else {
+      console.log("type your password again");
+    }
 
-    setIsMessageShown(true)
+    setEmail("");
+    setPassword("");
+    setRepeatPassword("");
 
+    setIsMessageShown(true);
   };
 
   useEffect(() => {
     const timeout = setTimeout(() => {
       setIsMessageShown(false);
-     }, 3000);
-     return () => clearTimeout(timeout);
-   },[isMessageShown]);
-
-
-
+    }, 3000);
+    return () => clearTimeout(timeout);
+  }, [isMessageShown]);
 
   return (
     <form className="container--form">
@@ -67,8 +67,13 @@ function RegisterScreen() {
         <h1>Register</h1>
         <p>Please fill in this form to create an account.</p>
         <hr />
-<div className='message'>  {isMessageShown && <p>{message}</p>} </div>
-<hr />
+        <div className="message">
+          {" "}
+          {isMessageShown && <p>{message}</p>}{" "}
+          {" "}
+          {isLoading && <div class="loader"></div>}{" "}
+        </div>
+        <hr />
         <label for="email">
           <b>Email</b>
         </label>
@@ -113,7 +118,7 @@ function RegisterScreen() {
           <a href="#">Terms & Privacy</a>.
         </p>
 
-        <button  className="registerbtn" onClick={handleRegister}>
+        <button className="registerbtn" onClick={handleRegister}>
           Register
         </button>
       </div>

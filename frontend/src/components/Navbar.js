@@ -1,6 +1,7 @@
 import "./Navbar.css";
 import mainLogo from "./OIP.jpg";
 import { SiCodechef } from "react-icons/si";
+import { Link } from "react-router-dom";
 
 import { useState } from "react";
 
@@ -15,27 +16,30 @@ function Navbar() {
 
               <div className="container__item--center">
                 <li>
-                  <a className="button button2" href="/home-screen">
-                    home screen
-                  </a>
+                  <Link to="/" className="button button2">
+                    Home
+                  </Link>
                 </li>
 
                 <li>
-                  <a className="button button2" href="/user-screen">
-                    user screen
-                  </a>
+
+                <Link to="/user-screen" className="button button2">
+                User screen
+                  </Link>
+                 
                 </li>
 
                 <li>
-                  <a className="button button2" href="/login-screen">
-                    login screen
-                  </a>
-                </li>
+                <Link to="/login-screen" className="button button2">
+                login screen
+                  </Link>
+                                </li>
 
                 <li>
-                  <a className="button button2" href="/register-screen">
-                    register screen
-                  </a>
+                <Link to="/register-screen" className="button button2">
+                register screen
+                  </Link>
+                
                 </li>
               </div>
               <li className="container__item--right">

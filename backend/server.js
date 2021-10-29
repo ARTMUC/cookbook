@@ -58,6 +58,7 @@ app.use(passport.session());
 
 // routes
 app.get("/", ensureLoggedIn(), isEmailConfirmed, (req, res) => {
+
   res.send("Hello World!");
 });
 

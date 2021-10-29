@@ -19,7 +19,7 @@ const register = async (req, res) => {
         const confirmationEmailHTML = `<a href=\"http://localhost:5000/api/v1/auth/confirm/${randomString}\">Hello ${email} click here to confirm email </a>`;
         const confirmationEmailSubject = "CookBook - please confirm your email ✔";
 
-        nodeMailer(email, confirmationEmailText, confirmationEmailHTML, confirmationEmailSubject); // add random url generator, add this value to DB, send the value thru email, add new route to verify email adress
+        email && nodeMailer(email, confirmationEmailText, confirmationEmailHTML, confirmationEmailSubject); 
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const newUser = new User({
@@ -45,6 +45,7 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
+  console.log(req)
   res.json("you are logged in"); // login function is taken care of by passport.js entirerly ... don't bother with this for now
 };
 
