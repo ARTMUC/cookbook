@@ -45,7 +45,7 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  console.log(req)
+//  console.log(req)
   res.json("you are logged in"); // login function is taken care of by passport.js entirerly ... don't bother with this for now
 };
 

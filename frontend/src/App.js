@@ -10,6 +10,14 @@ import RegisterScreen from "./screens/RegisterScreen";
 import LoginScreen from "./screens/LoginScreen";
 
 import { useState } from "react";
+
+// react - redux
+import { useSelector, useDispatch } from "react-redux";
+import { login, logout } from "./redux/actions/authActions";
+// 
+
+
+
 import {
   Route,
   Redirect,
@@ -22,7 +30,15 @@ function NotFound() {
 }
 
 function PrivateRoute({ component: Component, ...rest }) {
-  const isAuth = false;
+
+// react - redux
+const dispatch = useDispatch();   // I'm not using dispatch here but for now I won't be deleting this just for learning process
+const auth = useSelector((state) => state.auth);
+// 
+
+
+
+  const isAuth = auth.isAuthorized
 
   return (
     <Route
@@ -34,7 +50,14 @@ function PrivateRoute({ component: Component, ...rest }) {
   );
 }
 
+
+
 function App() {
+
+
+
+
+
   return (
     <Router>
       <div>

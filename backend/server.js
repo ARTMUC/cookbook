@@ -59,7 +59,9 @@ app.use(passport.session());
 // routes
 app.get("/", ensureLoggedIn(), isEmailConfirmed, (req, res) => {
 
-  res.send("Hello World!");
+const {user, isAuthenticated, cookies} = req
+
+  res.json({user, isAuthenticated , cookies});
 });
 
 app.use("/api/v1/auth", authRouter);
