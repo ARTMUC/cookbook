@@ -2,7 +2,9 @@ const express = require("express");
 const cors = require("cors");
 const passport = require("passport");
 const cookieParser = require("cookie-parser");
+const bodyParser = require("body-parser");
 const session = require("express-session");
+
 
 const ensureLoggedIn = require("connect-ensure-login").ensureLoggedIn; // another package that works with passport - ensures user is logged in
 
@@ -22,22 +24,32 @@ const connectDB = require("./db/connect");
 const User = require("./models/User");
 
 //passport
-require("./config/passport")();
+require("./config/passport")(passport);
 
 const port = process.env.PORT;
 
 const app = express();
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+
 app.use(
   session({
     secret: "secretcode", // need to move to the .env file!!!!!!!!!!!!!!!!!!!!!!!!!
-    resave: true,
+    resave: false,
     saveUninitialized: true,
+    cookie: { maxAge: 1000*60*60*24, httponly: true },
+    
   })
 );
 app.use(cookieParser());
-
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(
+  cors({
+    origin: "http://localhost:3000", // <-- location of the react app were connecting to
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true,
+  })
+);
 /*
 To use Passport in an Express or Connect-based application, configure it with the required 
 passport.initialize() middleware. If your application uses persistent login sessions 
@@ -57,11 +69,11 @@ app.use(passport.session());
 })();
 
 // routes
-app.get("/", ensureLoggedIn(), isEmailConfirmed, (req, res) => {
-
+ //app.get("/", ensureLoggedIn(), isEmailConfirmed, (req, res) => {
+  app.get("/",  (req, res) => {
 const {user, isAuthenticated, cookies} = req
-
-  res.json({user, isAuthenticated , cookies});
-});
+const session = req.session
+  res.json({user, isAuthenticated , cookies, session});
+  });
 
 app.use("/api/v1/auth", authRouter);

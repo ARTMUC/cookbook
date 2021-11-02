@@ -1,24 +1,24 @@
 import "./LoginScreen.css";
 
-
 import { useEffect, useState } from "react";
-
 
 // react - redux
 import { useSelector, useDispatch } from "react-redux";
 import { login, logout } from "../redux/actions/authActions";
-// 
+//
 
 function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isMessageShown, setIsMessageShown] = useState(false);
-  const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  
 
-// react - redux
+  // react - redux
   const dispatch = useDispatch();
-  const auth = useSelector((state) => state.auth);
-// 
+  const authMessage = useSelector((state) => state.auth.message);
+  const authUser = useSelector((state) => state.auth.user);
+  //
 
   const handleEmailChange = (e) => {
     e.preventDefault();
@@ -32,33 +32,19 @@ function LoginScreen() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    if (email && password) {
-      let r = await fetch("http://localhost:5000/api/v1/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: email, password: password }),
-      });
-      if (r.status === 401) {
-        setMessage("Wrong email or password.");
-      } else {
-        setMessage(await r.json());
+    setIsLoading(true)
 
-       // react - redux
-        dispatch(login(true));
-      // later I can pass the whole fetch to the dispatch (i'm using thunk), for now I'll pass just the required value
-
-      }
-    } else {
-      setMessage("Email and password required.");
-    }
+    await dispatch(login(email, password));
 
     setEmail("");
     setPassword("");
-
+    setIsLoading(false)
     setIsMessageShown(true);
   };
+
+ 
+
+
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -73,7 +59,7 @@ function LoginScreen() {
         <h1>Login</h1>
         <p>Type in your credentials to login.</p>
         <hr />
-        <div className="message"> {isMessageShown && <p>{message}</p>} </div>
+        <div className="message"> {isMessageShown && authMessage}  {isLoading && <div class="loader"></div>}{" "} </div>
         <hr />
         <label for="email">
           <b>Email</b>

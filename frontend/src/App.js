@@ -38,13 +38,13 @@ const auth = useSelector((state) => state.auth);
 
 
 
-  const isAuth = auth.isAuthorized
+  const isAuth = auth.user
 
   return (
     <Route
       {...rest}
       render={(props) =>
-        isAuth ? <Component {...props} /> : <Redirect to="/" />
+        isAuth ? <Component {...props} /> : <Redirect to="/login-screen" />
       }
     />
   );

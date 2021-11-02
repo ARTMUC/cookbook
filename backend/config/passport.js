@@ -1,10 +1,10 @@
 
-const passport = require("passport");
+
 const LocalStrategy = require("passport-local").Strategy;
 const User = require("../models/User")
 const bcrypt = require("bcryptjs");
 
-module.exports = () => {
+module.exports = (passport) => {
 
  
     passport.use(
@@ -12,11 +12,11 @@ module.exports = () => {
           usernameField: 'email',
         //  passwordField: 'passwd',
          
-        },(email, password, done) => {
+        }, (email, password, done) => {
           User.findOne({ email: email }, (err, user) => {
-            if (err) throw err;
-            if (!user) return done(null, false);
-            bcrypt.compare(password, user.password, (err, result) => {
+           if (err) throw err;
+           if (!user) return done(null, false);
+           bcrypt.compare(password, user.password, (err, result) => {
               if (err) throw err;
               if (result === true) {
                 return done(null, user);

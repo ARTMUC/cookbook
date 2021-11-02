@@ -44,9 +44,27 @@ const register = async (req, res) => {
  
 };
 
+
+
+
+
+
+
 const login = async (req, res) => {
-//  console.log(req)
-  res.json("you are logged in"); // login function is taken care of by passport.js entirerly ... don't bother with this for now
+  req.session.save((err) => {
+    if (err) {
+        return next(err);
+    }
+   //  console.log(req)
+  const responseObj = {
+    user: req.user,
+    message: "you are logged in",
+  }
+    res.json(responseObj); 
+  });
+
+
+
 };
 
 const logout = async (req, res) => {
@@ -77,9 +95,21 @@ const confirm = async (req, res) => {
   }
 };
 
+
+const confirmLoggedIn = async (req, res) => {
+console.log(req.user)
+const responseObj = {
+  user: req.user,
+  message: "you are logged in",
+}
+res.json(responseObj); 
+
+}
+
 module.exports = {
   register,
   login,
   logout,
   confirm,
+  confirmLoggedIn,
 };
