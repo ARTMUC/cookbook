@@ -47,8 +47,14 @@ export const login = (email, password) => async (dispatch, getState) => {
       });
     }
   } catch (error) {
-    console.log(error);
+    dispatch({
+      type: actionTypes.LOGIN,
+      payload: {
+        message: "Something went wrong. Please try again later.",
+      },
+    });
   }
+  
 };
 
 export const logout = () => async (dispatch, getState) => {

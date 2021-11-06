@@ -1,5 +1,4 @@
 import "./Navbar.css";
-import mainLogo from "./OIP.jpg";
 import { SiCodechef } from "react-icons/si";
 import { Link } from "react-router-dom";
 
@@ -10,78 +9,113 @@ import { useSelector, useDispatch } from "react-redux";
 import { login, logout, confirmLoggedIn } from "../redux/actions/authActions";
 //
 
-function Navbar() {
-// react - redux
-const dispatch = useDispatch();
-const auth = useSelector((state) => state.auth); // I'm not using selector here but for now I won't be deleting this just for learning process
-//
+function Navbar({showDrawer}) {
+  // react - redux
+  const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth); // I'm not using selector here but for now I won't be deleting this just for learning process
+  //
 
-const isAuth = auth.user
-
+  const isAuth = auth.user;
 
   return (
-    <div>
-      <div className="App">
-        <div>
-          <header className="header">
-            <ul className="container">
-              <SiCodechef className="container__item--logo" />
-
-              <div className="container__item--center">
-                <li>
-                  <Link to="/" className="button button2">
-                    Home
-                  </Link>
-                </li>
-{isAuth &&  <li>
-                  <Link to="/user-screen" className="button button2">
-                    User screen
-                  </Link>
-                </li>}
-               
-              </div>
-
-
-{isAuth? 
-(<li>
-  <button
-    className="button button2 container__item--right"
-    onClick={() => dispatch(logout())}
-  >
-    log out{" "}
-  </button>
-  </li>) :(<><li>
-<Link
-  to="/login-screen"
-  className="button button2 container__item--right"
->
-  login screen
-</Link>
-</li>
-
-<li>
-<Link
-  to="/register-screen"
-  className="button button2 container__item--right"
->
-  register screen
-</Link>
-</li></>)
-
-}
-
-             
-
-            
-            </ul>
-          </header>
-        </div>
+    <nav className="navbar">
+      <div className="navbar__logo">
+        <i>
+          <SiCodechef className="navbar__badge" />
+        </i>
+        <h1>COOKBOOK</h1>
       </div>
-    </div>
+
+      <ul className="navbar__menu">
+        <li className="navbar__menu-item">
+          <Link className="navbar__menu-link" to="/">
+            Home
+          </Link>
+        </li>
+        {isAuth && (
+          <li className="navbar__menu-item">
+            <Link className="navbar__menu-link" to="/user-screen">
+              User screen
+            </Link>
+          </li>
+        )}
+        {isAuth ? (
+          <li className="navbar__menu-item">
+            <div
+              className="navbar__menu-logout"
+              onClick={() => dispatch(logout())}
+            >
+              log out
+            </div>
+          </li>
+        ) : (
+          <>
+            <li className="navbar__menu-item">
+              <Link className="navbar__menu-login" to="/login-screen">
+                login
+              </Link>
+            </li>
+          </>
+        )}
+
+        
+      </ul>
+      <div className="hamburger__menu" onClick={showDrawer}>
+       <div></div>
+       <div></div>
+        <div></div>
+      </div>
+    </nav>
+
+    // <div>
+    // <div className="App">
+    //   <div>
+    //     <header className="header">
+    //       <ul className="container">
+    //         <li>
+    //           <SiCodechef className="logo" />
+    //         </li>
+
+    //         <li className="container__item--center">
+    //           <ul>
+    //             <li>
+    //               <Link to="/" className="button button2">
+    //                 Home
+    //               </Link>
+    //             </li>
+    //             {isAuth && (
+    //               <li>
+    //                 <Link to="/user-screen" className="button button2">
+    //                   User screen
+    //                 </Link>
+    //               </li>
+    //             )}
+    //           </ul>
+    //         </li>
+
+    //         {isAuth ? (
+    //           <li
+    //             className="button button2 container__item--right"
+    //             onClick={() => dispatch(logout())}
+    //           >
+    //             log out{" "}
+    //           </li>
+    //         ) : (
+    //           <>
+    //             <li className="container__item--right">
+    //               >
+    //               <Link className="button button2" to="/login-screen">
+    //                 login
+    //               </Link>
+    //             </li>
+    //           </>
+    //         )}
+    //       </ul>
+    //     </header>
+    //   </div>
+    // </div>
+    // </div>
   );
 }
 
 export default Navbar;
-
-
-

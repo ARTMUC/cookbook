@@ -1,6 +1,7 @@
 import "./LoginScreen.css";
 
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 // react - redux
 import { useSelector, useDispatch } from "react-redux";
@@ -12,7 +13,6 @@ function LoginScreen() {
   const [password, setPassword] = useState("");
   const [isMessageShown, setIsMessageShown] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  
 
   // react - redux
   const dispatch = useDispatch();
@@ -32,19 +32,15 @@ function LoginScreen() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setIsLoading(true)
+    setIsLoading(true);
 
     await dispatch(login(email, password));
 
     setEmail("");
     setPassword("");
-    setIsLoading(false)
+    setIsLoading(false);
     setIsMessageShown(true);
   };
-
- 
-
-
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -59,7 +55,11 @@ function LoginScreen() {
         <h1>Login</h1>
         <p>Type in your credentials to login.</p>
         <hr />
-        <div className="message"> {isMessageShown && authMessage}  {isLoading && <div class="loader"></div>}{" "} </div>
+        <div className="message">
+          {" "}
+          {isMessageShown && authMessage}{" "}
+          {isLoading && <div class="loader"></div>}{" "}
+        </div>
         <hr />
         <label for="email">
           <b>Email</b>
@@ -91,6 +91,12 @@ function LoginScreen() {
         <button className="registerbtn" onClick={handleLogin}>
           Login
         </button>
+        <div className="container--register signin">
+          <p>
+            You don't have an account?
+            <Link to="/register-screen">{"  "} Register now {"  "}</Link>
+          </p>
+        </div>
       </div>
     </form>
   );

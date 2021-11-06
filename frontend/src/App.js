@@ -6,6 +6,8 @@ import "./App.css";
 import UserScreen from "./screens/UserScreen";
 import HomeScreen from "./screens/HomeScreen";
 import Navbar from "./components/Navbar";
+import SideDrawer from "./components/SideDrawer";
+import BackDrop from "./components/BackDrop";
 import RegisterScreen from "./screens/RegisterScreen";
 import LoginScreen from "./screens/LoginScreen";
 
@@ -35,9 +37,6 @@ function PrivateRoute({ component: Component, ...rest }) {
 const dispatch = useDispatch();   // I'm not using dispatch here but for now I won't be deleting this just for learning process
 const auth = useSelector((state) => state.auth);
 // 
-
-
-
   const isAuth = auth.user
 
   return (
@@ -54,16 +53,23 @@ const auth = useSelector((state) => state.auth);
 
 function App() {
 
+  const [sideToggle, setSideToggle] = useState(false);
 
-
+const handleShowDrawer = () => {
+  console.log(sideToggle)
+  setSideToggle(prev => !prev)
+  
+}
 
 
   return (
     <Router>
       <div>
-        <Navbar />
+      <Navbar showDrawer={handleShowDrawer} />
+      <SideDrawer show={sideToggle} showDrawer={handleShowDrawer} />
+      <BackDrop show={sideToggle} showDrawer={handleShowDrawer} />
       </div>
-      <br />
+
       <main className="container--text">
         <Switch>
           <Route exact path="/" component={HomeScreen} />

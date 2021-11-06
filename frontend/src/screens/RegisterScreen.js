@@ -114,7 +114,7 @@ function RegisterScreen() {
         />
         <hr />
         <p>
-          By creating an account you agree to our{" "}
+          You agree to our{" "}
           <a href="#">Terms & Privacy</a>.
         </p>
 
@@ -123,11 +123,7 @@ function RegisterScreen() {
         </button>
       </div>
 
-      <div className="container--register signin">
-        <p>
-          Already have an account? <a href="#">Sign in</a>.
-        </p>
-      </div>
+     
     </form>
   );
 }
