@@ -1,6 +1,7 @@
 import "./HomeScreen.css";
 import video from "./photos/video.mp4";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 function HomeScreen() {
   return (
@@ -16,8 +17,8 @@ function HomeScreen() {
         Sense the shiver runs down your spine.
         Feel the chilliness of your body.
         And be ready for some fun.</div>
-        <button className='container__player-button'>Join now</button>
-      
+        
+        <Link className='container__player-button' to="/register-screen">{"  "} Join us now {"  "}</Link>
 
 </div>
     </div>

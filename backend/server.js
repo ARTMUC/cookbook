@@ -11,8 +11,8 @@ const ensureLoggedIn = require("connect-ensure-login").ensureLoggedIn; // anothe
 require("dotenv").config();
 
 //custom middleware
-
 const isEmailConfirmed = require("./middleware/isEmailConfirmed");
+const {errorHandling} = require("./middleware/errorHandling");
 
 // routers
 const authRouter = require("./routes/auth");
@@ -69,11 +69,12 @@ app.use(passport.session());
 })();
 
 // routes
- //app.get("/", ensureLoggedIn(), isEmailConfirmed, (req, res) => {
-  app.get("/",  (req, res) => {
+ app.get("/", ensureLoggedIn(), isEmailConfirmed, (req, res) => {
 const {user, isAuthenticated, cookies} = req
 const session = req.session
   res.json({user, isAuthenticated , cookies, session});
   });
 
 app.use("/api/v1/auth", authRouter);
+
+app.use(errorHandling)

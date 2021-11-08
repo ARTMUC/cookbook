@@ -40,12 +40,18 @@ function LoginScreen() {
     setPassword("");
     setIsLoading(false);
     setIsMessageShown(true);
+    // if (authUser) {
+    //   setTimeout(() => {
+    //     window.location.href = "/user-screen";
+    //   }, 1000);
+    // }   this does not work ----> I need to find another way to redirect without mesing with other timeouts
   };
 
   useEffect(() => {
     const timeout = setTimeout(() => {
       setIsMessageShown(false);
-    }, 3000);
+    }, 6000);
+
     return () => clearTimeout(timeout);
   }, [isMessageShown]);
 
@@ -94,7 +100,9 @@ function LoginScreen() {
         <div className="container--register signin">
           <p>
             You don't have an account?
-            <Link to="/register-screen">{"  "} Register now {"  "}</Link>
+            <Link to="/register-screen">
+              {"  "} Register now {"  "}
+            </Link>
           </p>
         </div>
       </div>

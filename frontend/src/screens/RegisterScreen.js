@@ -1,5 +1,5 @@
 import "./RegisterScreen.css";
-
+import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 function RegisterScreen() {
@@ -114,8 +114,8 @@ function RegisterScreen() {
         />
         <hr />
         <p>
-          You agree to our{" "}
-          <a href="#">Terms & Privacy</a>.
+          Already have an account?
+          <Link to="/login-screen">{"  "} LOGIN HERE {"  "}</Link>
         </p>
 
         <button className="registerbtn" onClick={handleRegister}>

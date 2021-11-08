@@ -3,76 +3,77 @@ const User = require("../models/User");
 const nodeMailer = require("../config/nodemailer");
 const { randomBytes } = require("crypto");
 const { promisify } = require("util");
+const CustomError = require("../errors/CustomError");
 
 const rndmBytes = promisify(randomBytes);
 
-const register = async (req, res) => {
+const register = async (req, res, next) => {
   const { email, password } = req.body;
-    try {
-      const doc = await User.findOne({ email })
-      if (doc) res.json("User Already Exists");
-      if (!doc) {
-        const randomValue = await rndmBytes(16);
-        const randomString = randomValue.toString("hex");
-
-        const confirmationEmailText = `localhost:5000/api/v1/auth/confirm/${randomString}`;
-        const confirmationEmailHTML = `<a href=\"http://localhost:5000/api/v1/auth/confirm/${randomString}\">Hello ${email} click here to confirm email </a>`;
-        const confirmationEmailSubject = "CookBook - please confirm your email ✔";
-
-        email && nodeMailer(email, confirmationEmailText, confirmationEmailHTML, confirmationEmailSubject); 
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        const newUser = new User({
-          email: email,
-          password: hashedPassword,
-          isEmailConfirmed: false,
-          confirmation_Id: randomString,
-        });
-        await newUser.save((err) => {
-          if (err) {
-            res.json(err.message);
-          } else {
-            res.json("Check your inbox. We've sent you email with confirmation link.");
-          }
-        });
-      }
-    } catch (error) {
-      console.log(error);
-      res.json("err");
-      return;
-    }
- 
-};
-
-
-
-
-
-
-
-const login = async (req, res) => {
-  req.session.save((err) => {
-    if (err) {
-        return next(err);
-    }
-   //  console.log(req)
-  const responseObj = {
-    user: req.user,
-    message: "you are logged in",
+  if (!email || !password) {
+    throw new CustomError("Email and Password required", 400);
   }
-    res.json(responseObj); 
-  });
+  try {
+    const doc = await User.findOne({ email });
+    if (doc) {
+      throw new CustomError("User already exists", 400);
+    }
+    if (!doc) {
+      const randomValue = await rndmBytes(16);
+      const randomString = randomValue.toString("hex");
 
+      const confirmationEmailText = `localhost:5000/api/v1/auth/confirm/${randomString}`;
+      const confirmationEmailHTML = `<a href=\"http://localhost:5000/api/v1/auth/confirm/${randomString}\">Hello ${email} click here to confirm email </a>`;
+      const confirmationEmailSubject = "CookBook - please confirm your email ✔";
 
+      email &&
+       await nodeMailer(
+          email,
+          confirmationEmailText,
+          confirmationEmailHTML,
+          confirmationEmailSubject
+        );
+      const hashedPassword = await bcrypt.hash(password, 10);
 
+      const newUser = new User({
+        email: email,
+        password: hashedPassword,
+        isEmailConfirmed: false,
+        confirmation_Id: randomString,
+      });
+      await newUser.save();
+      res.status(201).json({
+        message:
+          "Check your inbox. We've sent you email with confirmation link.",
+      });
+    }
+  } catch (error) {
+    return next(error);
+  }
 };
 
-const logout = async (req, res) => {
-  req.logout(); // logout function is taken care of by passport.js entirerly ... don't bother with this for now
-  res.send("success");
+const login = async (req, res, next) => {
+  try {
+    req.session.save();
+    const responseObj = {
+      user: req.user,
+      message: "you are logged in",
+    };
+    res.status(200).json(responseObj);
+  } catch (error) {
+    return next(error);
+  }
 };
 
-const confirm = async (req, res) => {
+const logout = async (req, res, next) => {
+  try {
+    req.logout(); // logout function is taken care of by passport.js entirerly ... don't bother with this for now
+    res.status(200).json({ message: "you are logged out" });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+const confirmEmail = async (req, res, next) => {
   const receivedConfirmationId = `${req.params.no}`;
 
   try {
@@ -81,35 +82,39 @@ const confirm = async (req, res) => {
       { isEmailConfirmed: true }
     );
 
-    if (!doc)
-      res.send(
-        "Your confirmation link doesn't work. Please contact Administartor."
+    if (!doc) {
+      throw new CustomError(
+        "Your confirmation link doesn't work. Please contact Administartor.",
+        401
       );
+    }
     if (doc) {
-      res.send("email confirmed");
+      res.status(200).send("email confirmed");
     }
   } catch (error) {
-    console.log(error);
-    res.send("err");
-    return;
+    return next(error);
   }
 };
 
-
-const confirmLoggedIn = async (req, res) => {
-console.log(req.user)
-const responseObj = {
-  user: req.user,
-  message: "you are logged in",
-}
-res.json(responseObj); 
-
-}
+const confirmLoggedIn = async (req, res, next) => {
+  try {
+    if (!req.user) {
+      throw new CustomError("you are not logged in", 401);
+    }
+    const responseObj = {
+      user: req.user,
+      message: "you are logged in",
+    };
+    res.status(200).json(responseObj);
+  } catch (error) {
+    return next(error);
+  }
+};
 
 module.exports = {
   register,
   login,
   logout,
-  confirm,
+  confirmEmail,
   confirmLoggedIn,
 };

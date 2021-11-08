@@ -1,49 +1,55 @@
-
-
 const LocalStrategy = require("passport-local").Strategy;
-const User = require("../models/User")
+const User = require("../models/User");
 const bcrypt = require("bcryptjs");
+const CustomError = require("../errors/CustomError");
 
 module.exports = (passport) => {
+  const strategy = new LocalStrategy(
+    {
+      usernameField: "email",
+      //  passwordField: 'passwd',
+    },
 
- 
-    passport.use(
-        new LocalStrategy({
-          usernameField: 'email',
-        //  passwordField: 'passwd',
-         
-        }, (email, password, done) => {
-          User.findOne({ email: email }, (err, user) => {
-           if (err) throw err;
-           if (!user) return done(null, false);
-           bcrypt.compare(password, user.password, (err, result) => {
-              if (err) throw err;
-              if (result === true) {
-                return done(null, user);
-              } else {
-                return done(null, false);
-              }
-            });
-          });
-        })
-      );
-      
-      passport.serializeUser((user, cb) => {
-        cb(null, user._id);
-      });
-      
-      passport.deserializeUser((id, cb) => {
-        User.findOne({ _id: id }, (err, user) => {
-          const userInformation = {
-            email: user.email,
-            isEmailConfirmed: user.isEmailConfirmed,
-            id: user._id,
-          };
-          cb(err, userInformation);
-        });
-      });
+    async (email, password, done) => {
+      try {
+        const user = await User.findOne({ email });
+        if (!user) {
+          throw new CustomError("Wrong email or password", 401);
+        }
+        const match = await bcrypt.compare(password, user.password);
+        if (!match) {
+          throw new CustomError("Wrong email or password", 401);
+        }
+        return done(null, user);
+      } catch (error) {
+        return done(error);
+      }
+    }
+  );
+
+  passport.use(strategy);
+
+  passport.serializeUser((user, cb) => {
+    cb(null, user._id);
+  });
 
 
+
+  passport.deserializeUser(async (id, done) => {
+    try {
+      const user = await User.findOne({ _id: id });
+      if (!user) {
+        throw new CustomError("Wrong email or password", 401);
+      }
+      const userInformation = {
+        email: user.email,
+        isEmailConfirmed: user.isEmailConfirmed,
+        id: user._id,
+      };
+      done(null, userInformation);
+    } catch (error) {
+       done(error);
+    }
+  });
 
 };
-
