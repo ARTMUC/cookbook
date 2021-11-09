@@ -61,8 +61,7 @@ function LoginScreen() {
         <h1>Login</h1>
         <p>Type in your credentials to login.</p>
         <hr />
-        <div className="message">
-          {" "}
+        <div className= {authUser ? 'message-success':'message-fail'}>
           {isMessageShown && authMessage}{" "}
           {isLoading && <div class="loader"></div>}{" "}
         </div>

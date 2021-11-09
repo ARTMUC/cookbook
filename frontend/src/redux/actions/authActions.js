@@ -2,59 +2,37 @@ import * as actionTypes from "../constants/authConstants";
 
 export const login = (email, password) => async (dispatch, getState) => {
   try {
-    if (email && password) {
-      const response = await fetch("http://localhost:5000/api/v1/auth/login", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: email, password: password }),
-      });
+    const response = await fetch("http://localhost:5000/api/v1/auth/login", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email: email, password: password }),
+    });
 
-      if (response.status !== 200) {
-        const authData = {
-          message: "wrong email or password",
-        };
+    const data = await response.json();
 
-        localStorage.setItem("redux-storage", JSON.stringify(authData));
+    const authData = {
+      user: data.user,
+      message: data.message,
+    };
 
-        dispatch({
-          type: actionTypes.LOGIN,
-          payload: { ...authData },
-        });
-      } else {
-        const data = await response.json();
+    localStorage.setItem("redux-storage", JSON.stringify(authData));
 
-        const authData = {
-          user: data.user,
-          message: data.message,
-        };
-
-        localStorage.setItem("redux-storage", JSON.stringify(authData));
-
-        dispatch({
-          type: actionTypes.LOGIN,
-          payload: { ...authData },
-        });
-      }
-    } else {
-      dispatch({
-        type: actionTypes.LOGIN,
-        payload: {
-          message: "Email and password required.",
-        },
-      });
-    }
+    dispatch({
+      type: actionTypes.LOGIN,
+      payload: { ...authData },
+    });
   } catch (error) {
+    console.log(error);
     dispatch({
       type: actionTypes.LOGIN,
       payload: {
-        message: "Something went wrong. Please try again later.",
+        message: 'something went wrong',
       },
     });
   }
-  
 };
 
 export const logout = () => async (dispatch, getState) => {
@@ -73,31 +51,18 @@ export const logout = () => async (dispatch, getState) => {
 };
 
 export const confirmLoggedIn = () => async (dispatch, getState) => {
-  const response = await fetch(
-    "http://localhost:5000/api/v1/auth/ensureLoggedIn",
-    {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
-
-  if (response.status !== 200) {
-    const authData = {
-      message: "you are not logged in",
-    };
-
-    localStorage.setItem("redux-storage", JSON.stringify(authData));
-
-    dispatch({
-      type: actionTypes.CONFIRM_LOGGED_IN,
-      payload: { ...authData },
-    });
-  } else {
+  try {
+    const response = await fetch(
+      "http://localhost:5000/api/v1/auth/ensureLoggedIn",
+      {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
     const data = await response.json();
-
     const authData = {
       user: data.user,
       message: data.message,
@@ -108,6 +73,14 @@ export const confirmLoggedIn = () => async (dispatch, getState) => {
     dispatch({
       type: actionTypes.CONFIRM_LOGGED_IN,
       payload: { ...authData },
+    });
+  } catch (error) {
+    console.log(error);
+    dispatch({
+      type: actionTypes.LOGIN,
+      payload: {
+        message: 'something went wrong',
+      },
     });
   }
 };
