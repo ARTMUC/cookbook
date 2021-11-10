@@ -60,12 +60,12 @@ function LoginScreen() {
       <div className="container--register">
         <h1>Login</h1>
         <p>Type in your credentials to login.</p>
-        <hr />
-        <div className= {authUser ? 'message-success':'message-fail'}>
-          {isMessageShown && authMessage}{" "}
-          {isLoading && <div class="loader"></div>}{" "}
+
+        <div className={authUser ? "message-success" : "message-fail"}>
+          {isMessageShown && authMessage}
+          {isLoading && <div class="loader"></div>}
         </div>
-        <hr />
+
         <label for="email">
           <b>Email</b>
         </label>
@@ -91,7 +91,6 @@ function LoginScreen() {
           value={password}
           onChange={handlePasswordChange}
         />
-        <hr />
 
         <button className="registerbtn" onClick={handleLogin}>
           Login
@@ -99,9 +98,7 @@ function LoginScreen() {
         <div className="container--register signin">
           <p>
             You don't have an account?
-            <Link to="/register-screen">
-              {"  "} Register now {"  "}
-            </Link>
+            <Link to="/register-screen">Register now</Link>
           </p>
         </div>
       </div>

@@ -25,8 +25,8 @@ module.exports = async (reiceiverEmail, emailText, emailHTML, emailSubject) => {
       text: emailText,
       html: emailHTML,
     });
-    console.log("Message sent: %s", info.messageId);
-    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+    // console.log("Message sent: %s", info.messageId);
+    // console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
   } catch (error) {
     throw new CustomError("error sending e-mail", 503);
   }
