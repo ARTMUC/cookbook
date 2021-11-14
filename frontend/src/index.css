@@ -16,7 +16,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-image: var(--main-body-gradient);
   background-repeat: no-repeat;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 :root {
@@ -24,7 +24,7 @@ body {
   --secondary-navbar-color: #47355A;
   --main-navbar-gradient: linear-gradient(15deg, #563879 0%, #47355A 100%);
   /* --main-body-gradient: linear-gradient(15deg, #2b2b2b 0%, #363138 100%); */
-  --main-body-gradient: linear-gradient(15deg, #dacebc 0%, #575646 100%);
+  --main-body-gradient: linear-gradient(15deg, #39323b9d 0%, #473e499d 100%);
   --main-danger-color: #e90d0d;
   --secondary-danger-color: #e74141;
   --main-positive-color: #11A311;

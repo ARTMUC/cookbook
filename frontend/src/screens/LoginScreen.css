@@ -1,16 +1,21 @@
-.container--form {
+
+
+
+.container-login {
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
     justify-content: center;
     align-items: center;
     align-content: center;
+    margin-top: 20vh;
+
 }
 
 
 
   /* Add padding to containers */
-  .container--register {
+  .container-login__header {
     padding: 16px;
     background-color: rgba(255, 255, 255, 0.3);
     width:100%;
@@ -24,29 +29,24 @@
   }
   
   /* Full-width input fields */
-  input[type=text], input[type=password] {
+  .form-login__input-password, .form-login__input-email {
     width: 100%;
     padding: 15px;
     margin: 5px 0 22px 0;
     display: inline-block;
     border: none;
-    background: #f1f1f1;
+    background: rgba(255, 255, 255, 0.2);
   }
   
-  input[type=text]:focus, input[type=password]:focus {
-    background-color: #ddd;
+  .form-login__input-password:focus, .form-login__input-email:focus {
+    background: rgba(255, 255, 255, 0.3);
     outline: none;
   }
   
-  /* Overwrite default styles of hr */
-  hr {
-    border: 1px solid #f1f1f1;
-    margin-bottom: 25px;
-  }
   
   /* Set a style for the submit button */
-  .registerbtn {
-    background-color: #000000;
+  .form-login__button {
+    background-color: var(--secondary-positive-color);
     color: white;
     padding: 16px 20px;
     margin: 8px 0;
@@ -56,31 +56,37 @@
     opacity: 0.9;
   }
   
-  .registerbtn:hover {
+  .form-login__button:hover {
+    background-color: var(--main-positive-color);
     opacity: 1;
   }
   
   /* Add a blue text color to links */
-  a {
-   color: dodgerblue;
+  .form-login__footer-link {
+   color: TOMATO;
+   font-weight: bold;
   }
   
   /* Set a grey background color and center the text of the "sign in" section */
-  .signin {
-    background-color: #f1f1f1;
+  .form-login__footer {
+    /* background-color: #f1f1f1; */
     text-align: center;
   }
 
-  .message-success {
+  .container-login__message-success {
     color: green;
     font-size: 15px;
+    height:40px;
+    padding-top:20px;
   }
-  .message-fail {
+  .container-login__message-fail {
     color: red;
     font-size: 15px;
+    height:40px;
+    padding-top:20px;
   }
 
-  .loader {
+  .container-login__loader-circle {
  
     border: 3px solid #7c7c7c; /* Light grey */
     border-top: 3px solid #191a1a; /* Blue */

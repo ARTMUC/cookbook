@@ -56,20 +56,21 @@ function LoginScreen() {
   }, [isMessageShown]);
 
   return (
-    <form className="container--form">
-      <div className="container--register">
-        <h1>Login</h1>
-        <p>Type in your credentials to login.</p>
+    <form className="container-login">
+      <div className="container-login__header">
+        <h1 className="container-login__title">Login</h1>
+        <p className="container-login__subtitle">Type in your credentials to login.</p>
 
-        <div className={authUser ? "message-success" : "message-fail"}>
+        <div className={authUser ? "container-login__message-success" : "container-login__message-fail"}>
           {isMessageShown && authMessage}
-          {isLoading && <div class="loader"></div>}
+          {isLoading && <div className="container-login__loader-circle"></div>}
         </div>
 
         <label for="email">
           <b>Email</b>
         </label>
         <input
+        className="form-login__input-email"
           type="text"
           placeholder="Enter Email"
           name="email"
@@ -83,6 +84,7 @@ function LoginScreen() {
           <b>Password</b>
         </label>
         <input
+        className="form-login__input-password"
           type="password"
           placeholder="Enter Password"
           name="psw"
@@ -92,13 +94,13 @@ function LoginScreen() {
           onChange={handlePasswordChange}
         />
 
-        <button className="registerbtn" onClick={handleLogin}>
+        <button className="form-login__button" onClick={handleLogin}>
           Login
         </button>
-        <div className="container--register signin">
+        <div className="form-login__footer">
           <p>
             You don't have an account?
-            <Link to="/register-screen">Register now</Link>
+            <Link className="form-login__footer-link" to="/register-screen">REGISTER NOW!</Link>
           </p>
         </div>
       </div>

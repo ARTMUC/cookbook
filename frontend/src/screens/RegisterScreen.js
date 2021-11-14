@@ -8,7 +8,7 @@ function RegisterScreen() {
   const [repeatPassword, setRepeatPassword] = useState("");
   const [isMessageShown, setIsMessageShown] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [message, setMessage] = useState("");
+  const [serverMessage, setServerMessage] = useState("");
 
   const handleEmailChange = (e) => {
     e.preventDefault();
@@ -29,22 +29,32 @@ function RegisterScreen() {
   };
 
   const handleRegister = async (e) => {
-    setIsMessageShown(false)
-    setIsLoading(true)
-    
-    if (password === repeatPassword) {
-      e.preventDefault();
-      let r = await fetch("http://localhost:5000/api/v1/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: email, password: password }),
-      });
-      setMessage(await r.json());
-      setIsLoading(false)
-    } else {
-      console.log("type your password again");
+    setIsMessageShown(false);
+    setIsLoading(true);
+
+    try {
+      if (password === repeatPassword) {
+        e.preventDefault();
+        let r = await fetch("http://localhost:5000/api/v1/auth/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: email, password: password }),
+        });
+        setServerMessage(await r.json());
+        setIsLoading(false);
+      } else {
+        setServerMessage({
+          message: 'Both passwords must be identical',
+          statusCode: 400,
+        });
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.log(error);
+      setServerMessage({ message: "something went wrong", statusCode: 400 });
+      setIsLoading(false);
     }
 
     setEmail("");
@@ -61,23 +71,31 @@ function RegisterScreen() {
     return () => clearTimeout(timeout);
   }, [isMessageShown]);
 
+  const { message, statusCode } = serverMessage;
+
   return (
-    <form className="container--form">
-      <div className="container--register">
-        <h1>Register</h1>
-        <p>Please fill in this form to create an account.</p>
-        <hr />
-        <div className="message">
-          {" "}
-          {isMessageShown && <p>{message}</p>}{" "}
-          {" "}
-          {isLoading && <div class="loader"></div>}{" "}
+    <form className="container-register">
+      <div className="container-register__header">
+        <h1 className="container-register__title">Register</h1>
+        <p className="container-register__subtitle">
+          Please fill in this form to create an account.
+        </p>
+        <div
+          className={
+            !statusCode
+              ? "container-register__message-success"
+              : "container-register__message-fail"
+          }
+        >
+          {isMessageShown && message}
+          {isLoading && <div className="container-register__loader-circle"></div>}
         </div>
-        <hr />
+      
         <label for="email">
           <b>Email</b>
         </label>
         <input
+         className="form-register__input-email"
           type="text"
           placeholder="Enter Email"
           name="email"
@@ -91,6 +109,7 @@ function RegisterScreen() {
           <b>Password</b>
         </label>
         <input
+        className="form-register__input-password"
           type="password"
           placeholder="Enter Password"
           name="psw"
@@ -104,6 +123,7 @@ function RegisterScreen() {
           <b>Repeat Password</b>
         </label>
         <input
+        className="form-register__input-password"
           type="password"
           placeholder="Repeat Password"
           name="psw-repeat"
@@ -112,18 +132,18 @@ function RegisterScreen() {
           value={repeatPassword}
           onChange={handleRepeatPasswordChange}
         />
-        <hr />
-        <p>
+
+        <p className="form-register__footer">
           Already have an account?
-          <Link to="/login-screen">{"  "} LOGIN HERE {"  "}</Link>
+          <Link className="form-register__footer-link" to="/login-screen">
+            {"  "} LOGIN HERE {"  "}
+          </Link>
         </p>
 
-        <button className="registerbtn" onClick={handleRegister}>
+        <button className="form-register__button" onClick={handleRegister}>
           Register
         </button>
       </div>
-
-     
     </form>
   );
 }

@@ -5,23 +5,23 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const session = require("express-session");
 
-
-const ensureLoggedIn = require("connect-ensure-login").ensureLoggedIn; // another package that works with passport - ensures user is logged in
-
 require("dotenv").config();
 
 //custom middleware
 const isEmailConfirmed = require("./middleware/isEmailConfirmed");
-const {errorHandling} = require("./middleware/errorHandling");
+const { errorHandling } = require("./middleware/errorHandling");
+const confirmLoggedIn = require("./middleware/confirmLoggedIn");
 
 // routers
 const authRouter = require("./routes/auth");
+const recipeRouter = require("./routes/recipe.js");
 
 // database
 const connectDB = require("./db/connect");
 
 //models
 const User = require("./models/User");
+const Recipe = require("./models/Recipe");
 
 //passport
 require("./config/passport")(passport);
@@ -36,8 +36,7 @@ app.use(
     secret: "secretcode", // need to move to the .env file!!!!!!!!!!!!!!!!!!!!!!!!!
     resave: false,
     saveUninitialized: true,
-    cookie: { maxAge: 1000*60*60*24, httponly: true },
-    
+    cookie: { maxAge: 1000 * 60 * 60 * 24, httponly: true },
   })
 );
 app.use(cookieParser());
@@ -69,18 +68,11 @@ app.use(passport.session());
 })();
 
 // routes
- app.get("/", ensureLoggedIn(), isEmailConfirmed, (req, res) => {
-const {user, isAuthenticated, cookies} = req
-const session = req.session
-  res.json({user, isAuthenticated , cookies, session});
-  });
 
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/recipe", confirmLoggedIn, isEmailConfirmed, recipeRouter);
 
-app.use(errorHandling)
-
-
-
+app.use(errorHandling);
 
 // test for pushing to branch :)
 // test for pushing to 2nd branch :)

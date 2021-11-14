@@ -1,6 +1,5 @@
 import "./App.css";
 
-
 //components
 
 import UserScreen from "./screens/UserScreen";
@@ -16,9 +15,7 @@ import { useState } from "react";
 // react - redux
 import { useSelector, useDispatch } from "react-redux";
 import { login, logout } from "./redux/actions/authActions";
-// 
-
-
+//
 
 import {
   Route,
@@ -32,12 +29,11 @@ function NotFound() {
 }
 
 function PrivateRoute({ component: Component, ...rest }) {
-
-// react - redux
-const dispatch = useDispatch();   // I'm not using dispatch here but for now I won't be deleting this just for learning process
-const auth = useSelector((state) => state.auth);
-// 
-  const isAuth = auth.user
+  // react - redux
+  const dispatch = useDispatch(); // I'm not using dispatch here but for now I won't be deleting this just for learning process
+  const auth = useSelector((state) => state.auth);
+  //
+  const isAuth = auth.user;
 
   return (
     <Route
@@ -49,25 +45,19 @@ const auth = useSelector((state) => state.auth);
   );
 }
 
-
-
 function App() {
-
   const [sideToggle, setSideToggle] = useState(false);
 
-const handleShowDrawer = () => {
-  console.log(sideToggle)
-  setSideToggle(prev => !prev)
-  
-}
-
+  const handleShowDrawer = () => {
+    setSideToggle((prev) => !prev);
+  };
 
   return (
     <Router>
       <div>
-      <Navbar showDrawer={handleShowDrawer} />
-      <SideDrawer show={sideToggle} showDrawer={handleShowDrawer} />
-      <BackDrop show={sideToggle} showDrawer={handleShowDrawer} />
+        <Navbar showDrawer={handleShowDrawer} />
+        <SideDrawer show={sideToggle} showDrawer={handleShowDrawer} />
+        <BackDrop show={sideToggle} showDrawer={handleShowDrawer} />
       </div>
 
       <main className="container--text">
