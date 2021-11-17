@@ -1,6 +1,6 @@
 import "./Navbar.css";
 import { SiCodechef } from "react-icons/si";
-import { Link } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 
 import { useState } from "react";
 
@@ -9,13 +9,17 @@ import { useSelector, useDispatch } from "react-redux";
 import { login, logout, confirmLoggedIn } from "../redux/actions/authActions";
 //
 
-function Navbar({showDrawer}) {
+function Navbar({ showDrawer }) {
   // react - redux
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth); // I'm not using selector here but for now I won't be deleting this just for learning process
   //
 
   const isAuth = auth.user;
+
+  const handleLogout = async () => {
+    await dispatch(logout());
+  };
 
   return (
     <nav className="navbar">
@@ -27,42 +31,36 @@ function Navbar({showDrawer}) {
       </div>
 
       <ul className="navbar__menu">
-        <li className="navbar__menu-item">
-          <Link className="navbar__menu-link" to="/">
-            Home
-          </Link>
-        </li>
         {isAuth && (
           <li className="navbar__menu-item">
-            <Link className="navbar__menu-link" to="/user-screen">
+            <NavLink
+              className="navbar__menu-link"
+              activeClassName="navbar__menu-active"
+              to="/user-screen"
+            >
               User screen
-            </Link>
+            </NavLink>
           </li>
         )}
         {isAuth ? (
           <li className="navbar__menu-item">
-            <div
-              className="navbar__menu-logout"
-              onClick={() => dispatch(logout())}
-            >
+            <div className="navbar__menu-logout" onClick={handleLogout}>
               log out
             </div>
           </li>
         ) : (
           <>
             <li className="navbar__menu-item">
-              <Link className="navbar__menu-login" to="/login-screen">
+              <NavLink className="navbar__menu-login" to="/login-screen">
                 login
-              </Link>
+              </NavLink>
             </li>
           </>
         )}
-
-        
       </ul>
       <div className="hamburger__menu" onClick={showDrawer}>
-       <div></div>
-       <div></div>
+        <div></div>
+        <div></div>
         <div></div>
       </div>
     </nav>

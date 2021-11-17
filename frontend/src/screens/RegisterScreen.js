@@ -68,6 +68,7 @@ function RegisterScreen() {
     const timeout = setTimeout(() => {
       setIsMessageShown(false);
     }, 3000);
+   
     return () => clearTimeout(timeout);
   }, [isMessageShown]);
 

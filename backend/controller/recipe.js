@@ -28,7 +28,6 @@ const getOneRecipe = async (req, res, next) => {
     } else {
       throw new Error("no access man");
     }
-  
   } catch (error) {
     console.log(error);
     res.json("error");
@@ -41,18 +40,15 @@ const getAllMyRecipes = async (req, res, next) => {
     const createdBy = { createdBy: email };
 
     //////////////////////////
-    const resultsPerPage = 10;
+    const resultsPerPage = 8;
     let page = req.params.page >= 1 ? req.params.page : 1;
-    const query = req.query.search;
-    let sort = req.params.sort
-    let order = req.params.order
-    console.log(sort)
-    console.log(order)
     page = page - 1;
+    const {sort,order} = req.query;
+      const sortingParams = Object.fromEntries([[sort, order]]);
 
     const recipes = await Recipe.find({ ...createdBy })
       //   .select("title")    // here we can pass array of obj keys - lets try to add the filter later to the params
-      .sort({ name: "asc" })       //figure out sorting by diffferent keys
+      .sort({ ...sortingParams }) //figure out sorting by diffferent keys
       .limit(resultsPerPage)
       .skip(resultsPerPage * page);
     res.status(200).json(recipes);
@@ -74,7 +70,7 @@ const getAllSharedRecipes = async (req, res, next) => {
 
     const recipes = await Recipe.find({ isShared: true })
       //   .select("title")
-      .sort({ name: "asc" })     //figure out sorting by diffferent keys
+      .sort({ name: "asc" }) //figure out sorting by diffferent keys
       .limit(resultsPerPage)
       .skip(resultsPerPage * page);
     res.status(200).json(recipes);
@@ -150,5 +146,3 @@ module.exports = {
   editRecipe,
   removeRecipe,
 };
-
-

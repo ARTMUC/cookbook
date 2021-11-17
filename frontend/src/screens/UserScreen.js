@@ -1,6 +1,7 @@
 import "./UserScreen.css";
 import axios from "axios";
 import RecipeCard from "../components/RecipeCard";
+import UserHub from "../components/UserHub";
 
 import { useState } from "react";
 import { useEffect } from "react";
@@ -20,18 +21,17 @@ function UserScreen() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(async () => {
-    await dispatch(confirmLoggedIn());
     await dispatch(getMyRecipes());
-    console.log(myRecipes);
+    await dispatch(confirmLoggedIn());
     setIsLoading(false)
   }, []);
 
   return (
     <>
-    <div></div>
-    <div className='recipe__container'>
-      {isLoading ? <>loading...</> : <>{myRecipes.map((recipe) => <RecipeCard key={recipe.key} {...recipe} />)} </> }
-    </div>
+    <UserHub/>
+   
+      {isLoading ? <div>loading...</div> : <ul className='recipe__container'>{myRecipes.map((recipe) => <RecipeCard key={recipe.key} {...recipe} />)} </ul> }
+  
     </>
   );
 }

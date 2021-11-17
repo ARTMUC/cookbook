@@ -1,54 +1,52 @@
 .recipe {
-
-
-background: rgba(182, 176, 182, 0.28);
-border-radius: 16px;
-box-shadow: 0 4px 30px rgba(88, 88, 88, 0.1);
-
-
-
-
-
-
-
-
-
+  background: #563879;
+  border-radius: 20px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  color: white;
   flex: 0 0 auto;
   margin: 20px;
   width: 300px;
-  
+  cursor: pointer;
+
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome, Edge, Opera and Firefox */
+}
+
+.recipe:hover {
+  background: #6e2db9;
 }
 
 .recipe__title {
-    text-align: center;
-    font-size: 16px;
-    text-transform: uppercase;
-    margin: 10px;
+  text-align: center;
+  font-size: 16px;
+  text-transform: uppercase;
+  margin: 10px;
 }
-.recipe__description{
-    font-size: 14px; 
-    margin: 10px;
-}
-
-.recipe__image{
-    display:inline-block;
-    WIDTH:280PX;
-    height:200px;
-    margin-left: 10px;
-
+.recipe__description {
+  font-size: 14px;
+  margin: 10px;
 }
 
-.recipe__author{
-    font-size: 14px; 
-    display:inline-block;
-    text-align: center;
-}
-.recipe__date{
-    font-size: 12px; 
+.recipe__image {
+  display: inline-block;
+  width: 300px;
+  height: 250px;
+  border-radius: 20px 20px 0px 0px;
 }
 
-.recipe__icon-share{
-    font-size: 20px; 
-    display:inline-block;
-    margin-left: 10px;
+.recipe__author {
+  font-size: 14px;
+  margin: 10px;
+  text-align: center;
+}
+
+.recipe__icon-share {
+  font-size: 16px;
+  margin: 10px;
+  text-align: center;
 }

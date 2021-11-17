@@ -32,7 +32,7 @@
     text-transform: uppercase;
   }
   
-  .sidedrawer__menu-link:hover {
+  .sidedrawer__menu-link:hover, .sidedrawer__menu-active  {
     background-color: var(--main-navbar-color);
     color: white;
   }

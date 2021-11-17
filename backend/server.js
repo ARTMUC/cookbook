@@ -40,6 +40,7 @@ app.use(
   })
 );
 app.use(cookieParser());
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
@@ -74,5 +75,4 @@ app.use("/api/v1/recipe", confirmLoggedIn, isEmailConfirmed, recipeRouter);
 
 app.use(errorHandling);
 
-// test for pushing to branch :)
-// test for pushing to 2nd branch :)
+

@@ -20,12 +20,12 @@ const Recipe = require("../models/Recipe");
 // patch recipe     PATCH
 // delete recipe    DELETE
 
-router.route("/page=:page/").get(getAllMyRecipes);
-// http://localhost:5000/api/v1/recipe/page=1/?sort=title&order=desc  //example querry 
+router.route("/page=:page").get(getAllMyRecipes);
+
 router.route("/").post(createRecipe);
 router.route("/shared/:page").get(getAllSharedRecipes);
 router
-  .route("/one/:recipe_id")
+  .route("/recipe=:recipe_id")
   .get(getOneRecipe)
   .patch(editRecipe)
   .delete(removeRecipe);

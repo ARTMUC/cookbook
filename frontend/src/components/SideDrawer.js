@@ -1,6 +1,6 @@
 import "./SideDrawer.css";
 import { SiCodechef } from "react-icons/si";
-import { Link } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 
 import { useState } from "react";
 
@@ -21,6 +21,14 @@ const SideDrawer = ({show, showDrawer}) => {
 
   const isAuth = auth.user;
 
+
+const handleLogout = async () => {
+  await dispatch(logout())
+  showDrawer()
+}
+
+
+
 if (show) {
     
 
@@ -28,23 +36,19 @@ if (show) {
     return (
    
     <ul className="sidedrawer">
-      <li className="sidedrawer__menu-item">
-        <Link className="sidedrawer__menu-link" to="/">
-          Home
-        </Link>
-      </li>
+  
       {isAuth && (
         <li className="sidedrawer__menu-item">
-          <Link className="sidedrawer__menu-link" to="/user-screen">
+          <NavLink className="sidedrawer__menu-link" activeClassName="sidedrawer__menu-active" to="/user-screen" onClick={showDrawer}>
             User screen
-          </Link>
+          </NavLink>
         </li>
       )}
       {isAuth ? (
         <li className="sidedrawer__menu-item">
           <div
             className="sidedrawer__menu-logout"
-            onClick={() => dispatch(logout())}
+            onClick={ handleLogout} 
           >
             log out
           </div>
@@ -52,9 +56,9 @@ if (show) {
       ) : (
         <>
           <li className="sidedrawer__menu-item">
-            <Link className="sidedrawer__menu-login" to="/login-screen">
+            <NavLink className="sidedrawer__menu-login" to="/login-screen" onClick={showDrawer}>
               login
-            </Link>
+            </NavLink>
           </li>
         </>
       )}

@@ -44,13 +44,20 @@ function LoginScreen() {
     //   setTimeout(() => {
     //     window.location.href = "/user-screen";
     //   }, 1000);
-    // }   this does not work ----> I need to find another way to redirect without mesing with other timeouts
+    // }  
+    //  this does not work ----> I need to find another way to redirect without mesing with other timeouts
   };
 
   useEffect(() => {
     const timeout = setTimeout(() => {
       setIsMessageShown(false);
     }, 6000);
+    
+    if (authUser) {
+      setTimeout(() => {
+        window.location.href = "/user-screen";
+      }, 1000);
+    }  
 
     return () => clearTimeout(timeout);
   }, [isMessageShown]);
