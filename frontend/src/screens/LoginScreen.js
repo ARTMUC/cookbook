@@ -56,7 +56,7 @@ function LoginScreen() {
     if (authUser) {
       setTimeout(() => {
         window.location.href = "/user-screen";
-      }, 1000);
+      }, 500);
     }  
 
     return () => clearTimeout(timeout);

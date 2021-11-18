@@ -1,8 +1,8 @@
 import * as actionTypes from "../constants/myRecipeConstants";
 
-export const getMyRecipes = () => async (dispatch, getState) => {
+export const getMyRecipes = (page, sortParams) => async (dispatch, getState) => {
   try {
-    const response = await fetch("http://localhost:5000/api/v1/recipe/page=1", {
+    const response = await fetch(`http://localhost:5000/api/v1/recipe/page=${page}?${sortParams}`, {
       method: "GET",
       credentials: "include",
       headers: {

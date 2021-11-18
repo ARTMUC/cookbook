@@ -64,7 +64,7 @@
 
 /* Add a blue text color to links */
 .form-register__footer-link {
-  color: TOMATO;
+  color: rgb(114, 7, 96);
   font-weight: bold;
 }
 

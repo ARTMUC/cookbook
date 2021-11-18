@@ -23,6 +23,16 @@
     list-style-type: none;
     
   }
+
+  .recipe__container__loader-circle {
+ 
+    border: 3px solid #7c7c7c; /* Light grey */
+    border-top: 3px solid #191a1a; /* Blue */
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 2s linear infinite;
+  }
   
 
   

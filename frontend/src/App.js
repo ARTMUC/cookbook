@@ -7,8 +7,12 @@ import HomeScreen from "./screens/HomeScreen";
 import Navbar from "./components/Navbar";
 import SideDrawer from "./components/SideDrawer";
 import BackDrop from "./components/BackDrop";
+import SingleRecipe from "./screens/SingleRecipe";
+import EditRecipe from "./screens/EditRecipe";
 import RegisterScreen from "./screens/RegisterScreen";
 import LoginScreen from "./screens/LoginScreen";
+
+
 
 import { useState } from "react";
 
@@ -66,6 +70,8 @@ function App() {
           <Route exact path="/login-screen" component={LoginScreen} />
           <Route exact path="/register-screen" component={RegisterScreen} />
           <PrivateRoute path="/user-screen" component={UserScreen} />
+          <PrivateRoute path="/recipe/:recipe_id" component ={SingleRecipe} />
+          <PrivateRoute path="/edit-recipe/:recipe_id" component ={EditRecipe} />
           <Route path="*" component={NotFound} />
         </Switch>
       </main>

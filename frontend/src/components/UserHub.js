@@ -2,36 +2,63 @@ import "./UserHub.css";
 
 import { useEffect, useState } from "react";
 
-const UserHub = () => {
-  //    const [sortValuesArray, setSortValuesArray] = useState([]);
-  const [sortValue, setSortValue] = useState("");
+// react - redux
+import { useSelector, useDispatch } from "react-redux";
 
-  const handleSortChange = (element) => {
-    // e.preventDefault();
-    setSortValue(element);
-  };
+//
+const UserHub = ({ changePage, changeSortParams, sortParams }) => {
 
-  useEffect(() => {
-    console.log(sortValue);
-    // setSortValuesArray(sortValuesArray => [...sortValuesArray, sortValue]);
-  }, [sortValue]);
-
+  // react - redux
+  const currentPage = useSelector((state) => state.myRecipes.page);
+  const totalPages = useSelector((state) => state.myRecipes.totalPages);
+  //
   return (
     <ul className="container-hub">
       <li className="container-hub__element-navigation">
-        <button>prev page</button>
-        <button>next page</button>
-      </li>
-      <li className="container-hub__element-sort">
-        sort by:
-        <select className="container-hub__element-sort"
-          value={sortValue}
-          onChange={(e) => handleSortChange(e.target.value)}
+        <button
+          className="container-hub__button-left"
+          onClick={() => changePage(-1)}
         >
-          <option className="container-hub__element-sort" value="grapefruit">Grapefruit</option>
-          <option className="container-hub__element-sort" value="lime">Lime</option>
-          <option className="container-hub__element-sort" value="coconut">Coconut</option>
-          <option className="container-hub__element-sort" value="mango">Mango</option>
+          prev page
+        </button>
+        <div className="container-hub__page-counter" >{currentPage + 1} / {totalPages}</div>
+        <button
+          className="container-hub__button-right"
+          onClick={() => changePage(1)}
+        >
+          next page
+        </button>
+      </li>
+      <li>
+        <select
+          className="container-hub__element-select"
+          value={sortParams}
+          onChange={(e) => changeSortParams(e.target.value)}
+        >
+          <option
+            className="container-hub__element-option"
+            value="sort=createdOn&order=-1"
+          >
+            newest
+          </option>
+          <option
+            className="container-hub__element-option"
+            value="sort=createdOn&order=1"
+          >
+            oldest
+          </option>
+          <option
+            className="container-hub__element-option"
+            value="sort=title&order=asc"
+          >
+            a b c
+          </option>
+          <option
+            className="container-hub__element-option"
+            value="sort=title&order=desc"
+          >
+            c b a
+          </option>
         </select>
       </li>
 

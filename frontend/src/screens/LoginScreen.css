@@ -63,7 +63,7 @@
   
   /* Add a blue text color to links */
   .form-login__footer-link {
-   color: TOMATO;
+   color: rgb(114, 7, 96);
    font-weight: bold;
   }
   

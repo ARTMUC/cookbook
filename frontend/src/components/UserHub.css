@@ -1,12 +1,13 @@
 .container-hub {
-  background: #563879;
+  background-color: var(--main-navbar-color);
+  background-image: var(--main-navbar-gradient);
   border-radius: 20px;
   box-shadow: 0 4px 30px rgba(88, 88, 88, 0.1);
   color: white;
   flex: 0 0 auto;
   margin: 20px;
-  width: 80%;
-  height: 50px;
+  /* width: 80%; */
+  min-height: 50px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   list-style-type: none;
   display: flex;
@@ -15,8 +16,80 @@
   flex-wrap: wrap;
 }
 
-.container-hub__element-sort {
-  display: inline-flex;
-  color: red;
-  margin: 0 80px;
+.container-hub__element-select {
+  display: inline-block;
+  color: white;
+  padding: 12px;
+  min-width: 150px;
+  font-size: 16px;
+  text-transform: uppercase;
+  border-radius: 20px;
+  margin: 10px;
+  text-align: center;
+}
+.container-hub__element-select:hover {
+  background-color: var(--main-navbar-color);
+}
+.container-hub__element-select:focus {
+  background-color: var(--main-navbar-color);
+}
+
+.container-hub__element-option {
+  background-color: var(--main-navbar-color);
+}
+
+.container-hub__element-navigation {
+   display: flex;
+   border-radius: 16px;
+  text-transform: uppercase;
+  margin: 4px 4px 4px 20px;
+}
+
+.container-hub__button-left {
+  display: inline-block;
+  color: white;
+  text-transform: uppercase;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 16px 0px 0px 16px;
+
+  color: white;
+  padding: 12px;
+  min-width: 100px;
+  font-size: 16px;
+  text-align: center;
+}
+.container-hub__button-left:hover{
+  background-color: var(--main-navbar-color);
+}
+.container-hub__button-right {
+  display: inline-block;
+  color: white;
+  text-transform: uppercase;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 0px 16px 16px 0px;
+  
+  color: white;
+  padding: 12px;
+  min-width: 100px;
+  font-size: 16px;
+  text-align: center;
+}
+
+.container-hub__button-right:hover{
+  background-color: var(--main-navbar-color);
+}
+
+
+.container-hub__page-counter {
+  display: inline-block;
+  background-color: var(--main-navbar-color);
+  border-radius: 2px;
+  padding: 12px;
+  font-size: 16px;
+  color: white;
+  text-transform: uppercase;
+  text-align: center;
+ 
 }

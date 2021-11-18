@@ -1,5 +1,5 @@
 import "./UserScreen.css";
-import axios from "axios";
+
 import RecipeCard from "../components/RecipeCard";
 import UserHub from "../components/UserHub";
 
@@ -15,23 +15,55 @@ function UserScreen() {
   // react - redux
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth); // I'm not using selector here but for now I won't be deleting this just for learning process
-  const myRecipes = useSelector((state) => state.myRecipes);
+  const myRecipes = useSelector((state) => state.myRecipes.recipes);
+
+  const totalPages = useSelector((state) => state.myRecipes.totalPages);
   //
 
   const [isLoading, setIsLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [sortParams, setSortParams] = useState("sort=createdOn&order=-1");
+
+  const changePage = (skip) => {
+    setPage((currPage) => {
+      if (currPage + skip === 0) {
+        return 1;
+      }
+      if (currPage + skip > totalPages) {
+        return totalPages;
+      } else {
+        return currPage + skip;
+      }
+    });
+  };
+  const changeSortParams = (e) => {
+    setSortParams(e);
+  };
 
   useEffect(async () => {
-    await dispatch(getMyRecipes());
+    console.log(page);
+    await dispatch(getMyRecipes(page, sortParams));
     await dispatch(confirmLoggedIn());
-    setIsLoading(false)
-  }, []);
+    setIsLoading(false);
+  }, [page, sortParams]);
 
   return (
     <>
-    <UserHub/>
-   
-      {isLoading ? <div>loading...</div> : <ul className='recipe__container'>{myRecipes.map((recipe) => <RecipeCard key={recipe.key} {...recipe} />)} </ul> }
-  
+      <UserHub
+        changePage={changePage}
+        changeSortParams={changeSortParams}
+        sortParams={sortParams}
+      />
+
+      {isLoading ? (
+       <div className="recipe__container__loader-circle"></div>
+      ) : (
+        <ul className="recipe__container">
+          {myRecipes.map((recipe) => (
+            <RecipeCard {...recipe} />
+          ))}{" "}
+        </ul>
+      )}
     </>
   );
 }
