@@ -21,7 +21,7 @@ const getAllMyRecipes = async (req, res, next) => {
     const createdBy = { createdBy: email };
 
     //////////////////////////
-    const count = await Recipe.countDocuments(); // = 15 // i've got a bug here actually - it counts all documents from all users!!!!
+    const count = await Recipe.countDocuments({ ...createdBy }); 
     const resultsPerPage = 8;
 const totalPages = Math.ceil(count / resultsPerPage)
     let page;
