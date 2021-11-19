@@ -9,7 +9,8 @@
     align-items: center;
     align-content: center;
     margin-top: 20vh;
-
+    color:white;
+    width:320px;
 }
 
 
@@ -17,7 +18,7 @@
   /* Add padding to containers */
   .container-login__header {
     padding: 16px;
-    background-color: rgba(255, 255, 255, 0.3);
+    background-image: var(--main-navbar-gradient);
     width:100%;
     display: flex;
     flex-direction: column;
@@ -25,7 +26,8 @@
     justify-content: center;
     align-items: center;
     align-content: center;
-
+    border-radius: 20px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   }
   
   /* Full-width input fields */
@@ -36,11 +38,13 @@
     display: inline-block;
     border: none;
     background: rgba(255, 255, 255, 0.2);
+    
   }
   
   .form-login__input-password:focus, .form-login__input-email:focus {
     background: rgba(255, 255, 255, 0.3);
     outline: none;
+    color: white;
   }
   
   
@@ -63,7 +67,7 @@
   
   /* Add a blue text color to links */
   .form-login__footer-link {
-   color: rgb(114, 7, 96);
+   color: rgb(102, 10, 87);
    font-weight: bold;
   }
   

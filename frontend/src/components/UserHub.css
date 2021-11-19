@@ -2,13 +2,13 @@
   background-color: var(--main-navbar-color);
   background-image: var(--main-navbar-gradient);
   border-radius: 20px;
-  box-shadow: 0 4px 30px rgba(88, 88, 88, 0.1);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   color: white;
   flex: 0 0 auto;
   margin: 20px;
   /* width: 80%; */
   min-height: 50px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  
   list-style-type: none;
   display: flex;
   align-items: center;

@@ -1,17 +1,4 @@
-.registerbtn {
-    background-color: #000000;
-    color: white;
-    padding: 16px 20px;
-    margin: 8px 0;
-    border: none;
-    cursor: pointer;
-    width: 100%;
-    opacity: 0.9;
-  }
-  
-  .registerbtn:hover {
-    opacity: 1;
-  }
+
 
   .recipe__container {
     display: flex;

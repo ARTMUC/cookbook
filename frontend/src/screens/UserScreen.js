@@ -8,21 +8,21 @@ import { useEffect } from "react";
 // react - redux
 import { useSelector, useDispatch } from "react-redux";
 import { login, logout, confirmLoggedIn } from "../redux/actions/authActions";
-import { getMyRecipes } from "../redux/actions/myRecipesActions";
+
 //
 
 function UserScreen() {
   // react - redux
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth); // I'm not using selector here but for now I won't be deleting this just for learning process
-  const myRecipes = useSelector((state) => state.myRecipes.recipes);
-
-  const totalPages = useSelector((state) => state.myRecipes.totalPages);
   //
 
   const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [sortParams, setSortParams] = useState("sort=createdOn&order=-1");
+  const [recipes, setRecipes] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
 
   const changePage = (skip) => {
     setPage((currPage) => {
@@ -40,29 +40,59 @@ function UserScreen() {
     setSortParams(e);
   };
 
-  useEffect(async () => {
-    console.log(page);
-    await dispatch(getMyRecipes(page, sortParams));
-    await dispatch(confirmLoggedIn());
-    setIsLoading(false);
+  const fetchRecipesData = async (page, sortParams) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/v1/recipe/page=${page}?${sortParams}`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const data = await response.json();
+      if (data.statusCode) {
+        throw new Error("please try again later");
+      } else {
+        setRecipes(data.recipes);
+        setTotalPages(data.totalPages);
+        setCurrentPage(data.page);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    (async () => {
+      await dispatch(confirmLoggedIn());
+      await fetchRecipesData(page, sortParams);
+      setIsLoading(false);
+    })();
   }, [page, sortParams]);
 
   return (
     <>
-      <UserHub
-        changePage={changePage}
-        changeSortParams={changeSortParams}
-        sortParams={sortParams}
-      />
-
       {isLoading ? (
-       <div className="recipe__container__loader-circle"></div>
+        <div className="recipe__container__loader-circle"></div>
       ) : (
-        <ul className="recipe__container">
-          {myRecipes.map((recipe) => (
-            <RecipeCard {...recipe} />
-          ))}{" "}
-        </ul>
+        <>
+          <UserHub
+            changePage={changePage}
+            changeSortParams={changeSortParams}
+            sortParams={sortParams}
+            currentPage={currentPage}
+            totalPages={totalPages}
+          />
+          <ul className="recipe__container">
+            {recipes.map((recipe) => (
+              <RecipeCard {...recipe} />
+            ))}{" "}
+          </ul>
+        </>
       )}
     </>
   );

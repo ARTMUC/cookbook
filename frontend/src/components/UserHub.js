@@ -2,16 +2,14 @@ import "./UserHub.css";
 
 import { useEffect, useState } from "react";
 
-// react - redux
-import { useSelector, useDispatch } from "react-redux";
-
-//
-const UserHub = ({ changePage, changeSortParams, sortParams }) => {
-
-  // react - redux
-  const currentPage = useSelector((state) => state.myRecipes.page);
-  const totalPages = useSelector((state) => state.myRecipes.totalPages);
-  //
+const UserHub = ({
+  changePage,
+  changeSortParams,
+  sortParams,
+  currentPage,
+  totalPages,
+}) => {
+  
   return (
     <ul className="container-hub">
       <li className="container-hub__element-navigation">
@@ -21,7 +19,9 @@ const UserHub = ({ changePage, changeSortParams, sortParams }) => {
         >
           prev page
         </button>
-        <div className="container-hub__page-counter" >{currentPage + 1} / {totalPages}</div>
+        <div className="container-hub__page-counter">
+          {currentPage + 1} / {totalPages}
+        </div>
         <button
           className="container-hub__button-right"
           onClick={() => changePage(1)}
@@ -61,8 +61,6 @@ const UserHub = ({ changePage, changeSortParams, sortParams }) => {
           </option>
         </select>
       </li>
-
-      {/* <li>   {sortValuesArray.map(element=> <div> {element} </div>)} </li> */}
     </ul>
   );
 };
