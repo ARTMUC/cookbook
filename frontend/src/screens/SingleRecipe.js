@@ -26,6 +26,10 @@ function SingleRecipe() {
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
 
+  const handleToggleEditSingleRecipe = () => {
+    setIsEditing((prev) => !prev);
+  };
+
   const fetchRecipesData = async () => {
     try {
       await dispatch(confirmLoggedIn()); // handle entering the Recipe we dont have access to - right now it's not fething but no info you cant get that one (created by someone else + private)
@@ -41,15 +45,12 @@ function SingleRecipe() {
         }
       );
       const data = await response.json();
+      
       setRecipe(data[0]);
       setIsLoading(false);
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const handleEditSingleRecipe = () => {
-    setIsEditing(prev => !prev);
   };
 
   useEffect(() => {
@@ -69,9 +70,19 @@ function SingleRecipe() {
     <>
       {isLoading ? (
         <div>Loading...</div>
+      ) : isEditing ? (
+        <BigEditableRecipeCard
+          {...recipe}
+          isEditable={isEditable}
+          handleToggleEditSingleRecipe={handleToggleEditSingleRecipe}
+          fetchRecipesData={fetchRecipesData}
+        />
       ) : (
-        isEditing ? <BigEditableRecipeCard {...recipe} isEditable={isEditable} handleEditSingleRecipe={handleEditSingleRecipe} /> :
-        <BigRecipeCard {...recipe} isEditable={isEditable} handleEditSingleRecipe={handleEditSingleRecipe} />
+        <BigRecipeCard
+          {...recipe}
+          isEditable={isEditable}
+          handleToggleEditSingleRecipe={handleToggleEditSingleRecipe}
+        />
       )}
     </>
   );

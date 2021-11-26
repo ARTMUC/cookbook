@@ -60,6 +60,7 @@ function UserScreen() {
         setRecipes(data.recipes);
         setTotalPages(data.totalPages);
         setCurrentPage(data.page);
+        
       }
     } catch (error) {
       console.log(error);
@@ -87,11 +88,14 @@ function UserScreen() {
             currentPage={currentPage}
             totalPages={totalPages}
           />
-          <ul className="recipe__container">
+{  recipes[0] ? (<ul className="recipe__container">
             {recipes.map((recipe) => (
               <RecipeCard {...recipe} />
             ))}{" "}
-          </ul>
+          </ul>): <div>Nothing to load</div>}
+
+
+        
         </>
       )}
     </>

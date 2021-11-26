@@ -1,0 +1,127 @@
+.big-recipe__baner {
+  grid-area: a;
+  height: 300px;
+}
+.big-recipe__container-right {
+  grid-area: b;
+}
+.big-recipe__container-left {
+  grid-area: c;
+}
+
+.big-recipe {
+  color: white;
+  text-transform: uppercase;
+  width: 80%;
+  margin-top: 50px;
+  display: grid;
+  grid-template-columns: 0.5fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 50px 50px;
+  grid-template-areas:
+    "a a"
+    "c b ";
+  border: 3px solid var(--secondary-navbar-color);
+  border-radius: 23px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  margin-bottom: 50px;
+}
+
+.big-recipe__baner-hero {
+  width: 100%;
+  height: 250px;
+  background-image: var(--main-navbar-gradient);
+  position: relative;
+  border-radius: 20px 20px 0px 0px;
+}
+
+.big-recipe__baner-container {
+  width: 80%;
+  position: absolute;
+  display: flex;
+  margin-top: -175px;
+
+  justify-content: space-around;
+}
+
+.big-recipe__image {
+  display: inline-block;
+  width: 300px;
+  height: 250px;
+  border-radius: 5px;
+  /* background-image: var(--main-body-gradient); */
+  border: 5px solid #7b718f;
+  /* padding: 5px; */
+}
+
+.big-recipe__title {
+  display: block;
+  text-align: center;
+  font-size: 16px;
+  margin: 10px;
+}
+
+.big-recipe__description {
+  display: block;
+  text-align: center;
+  font-size: 14px;
+  margin: 10px;
+}
+
+.big-recipe__author {
+  display: block;
+  font-size: 14px;
+  margin: 10px;
+  text-align: center;
+}
+
+.big-recipe__icon-share {
+  display: block;
+  font-size: 16px;
+  margin: 10px;
+  text-align: center;
+}
+
+.big-recipe__button-edit {
+  background-color: var(--secondary-navbar-color);
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 16px;
+  text-transform: uppercase;
+  height: 50px;
+}
+
+.big-recipe__button-edit:hover {
+  background-color: var(--main-navbar-color);
+  color: white;
+}
+
+.big-recipe__container-left {
+  margin: 50px;
+  color: black;
+
+}
+
+.big-recipe__container-left li {
+    margin: 5px;
+  
+  }
+
+  .big-recipe__container-right {
+    margin: 30px;
+    color: black;
+  }
+
+  .big-recipe__description {
+    line-height: 1.6;
+    text-transform: none;
+    text-align: justify;
+    font-size: 16px;
+    
+  }

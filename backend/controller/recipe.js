@@ -1,3 +1,9 @@
+const { readFile, writeFile } = require("fs").promises;
+const { resolve } = require("path");
+
+const FILE_DIRECTORY = resolve(__dirname, "../utils/images");
+
+
 const Recipe = require("../models/Recipe");
 
 const getOneRecipe = async (req, res, next) => {
@@ -21,9 +27,15 @@ const getAllMyRecipes = async (req, res, next) => {
     const createdBy = { createdBy: email };
 
     //////////////////////////
-    const count = await Recipe.countDocuments({ ...createdBy }); 
+    const count = await Recipe.countDocuments({ ...createdBy });
     const resultsPerPage = 8;
-const totalPages = Math.ceil(count / resultsPerPage)
+    // let totalPages
+    // if (count){
+    //    totalPages = Math.ceil(count / resultsPerPage)
+    // } else {  totalPages = 1}
+
+    const totalPages = count ? Math.ceil(count / resultsPerPage) : 1;
+
     let page;
     if (req.params.page <= 1) {
       page = 0;
@@ -92,7 +104,7 @@ const editRecipe = async (req, res, next) => {
     const id = req.params.recipe_id;
     const date = new Date();
     const editedOn = { editedOn: date };
-    const { title, description, image, isShared } = req.body;
+    const { title, description, image, isShared, ingriedients } = req.body;
     if (!title || !description || !image) {
       throw new Error("fields required");
     }
@@ -101,6 +113,7 @@ const editRecipe = async (req, res, next) => {
       description,
       image,
       isShared,
+      ingriedients,
       ...editedOn,
     };
     let recipe = await Recipe.findOneAndUpdate(
@@ -128,6 +141,28 @@ const removeRecipe = async (req, res, next) => {
   }
 };
 
+const getImage = async (req,res,next) =>{
+
+  ///
+  function getRandomIntInclusive(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1) + min); //The maximum is inclusive and the minimum is inclusive
+  }
+///
+
+
+  const image_id = req.params.image_id;
+  const imagePath = resolve(FILE_DIRECTORY, `${image_id}`);
+  const image = await readFile(imagePath);
+  setTimeout(()=>{
+    res.writeHead(200, {'Content-Type': 'image/gif' });
+    res.end(image, 'binary');
+  },getRandomIntInclusive(100,10000))
+
+
+}
+
 module.exports = {
   getOneRecipe,
   getAllMyRecipes,
@@ -135,4 +170,5 @@ module.exports = {
   createRecipe,
   editRecipe,
   removeRecipe,
+  getImage,
 };

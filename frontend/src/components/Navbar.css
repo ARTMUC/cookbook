@@ -122,7 +122,7 @@ margin-top: 25px;
 
 .hamburger__menu:hover > div {
 
-  background: tomato;
+  background: var(--main-navbar-color);
   
 }
 

@@ -84,8 +84,8 @@
 
 .container-hub__page-counter {
   display: inline-block;
-  background-color: var(--main-navbar-color);
-  border-radius: 2px;
+  /* background-color: var(--main-navbar-color); */
+  border-radius: 50%;
   padding: 12px;
   font-size: 16px;
   color: white;

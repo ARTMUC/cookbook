@@ -8,6 +8,7 @@ const {
   createRecipe,
   editRecipe,
   removeRecipe,
+  getImage,
 } = require("../controller/recipe");
 const Recipe = require("../models/Recipe");
 
@@ -29,6 +30,10 @@ router
   .get(getOneRecipe)
   .patch(editRecipe)
   .delete(removeRecipe);
+ 
+  router
+  .route("/image=:image_id")
+  .get(getImage);
 
 
 module.exports = router;
