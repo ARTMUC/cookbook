@@ -49,11 +49,28 @@ const BigEditableRecipeCard = ({
         body: JSON.stringify({
           title: editedTitle,
           description: editedDescription,
-          image: editedImage,
+          // image: editedImage,
           isShared: editedIsShared,
           ingriedients: [...editedIngredients],
         }),
       });
+
+  const image = editedImage;
+      const formData = new FormData();
+      formData.append("myFile", image[0]);
+      const response = await fetch(
+        `http://localhost:5000/api/v1/recipe/image`,
+        {
+          method: "POST",
+          credentials: "include",
+          body: formData,
+        }
+      );
+      const data = await response.json();
+      console.log(data);
+
+
+
       await fetchRecipesData();
       handleToggleEditSingleRecipe();
     } catch (error) {
@@ -77,6 +94,35 @@ const BigEditableRecipeCard = ({
     }
   };
 
+  const handleImageInput = async (e) => {
+
+    setEditedImage(e.target.files)
+
+
+
+
+
+
+
+    // try {
+    //   const image = e.target.files;
+    //   const formData = new FormData();
+    //   formData.append("myFile", image[0]);
+    //   const response = await fetch(
+    //     `http://localhost:5000/api/v1/recipe/image`,
+    //     {
+    //       method: "POST",
+    //       credentials: "include",
+    //       body: formData,
+    //     }
+    //   );
+    //   const data = await response.json();
+    //   console.log(data);
+    // } catch (error) {
+    //   console.log(error);
+    // }
+  };
+
   return (
     <>
       <form className="edit-recipe__form">
@@ -85,12 +131,17 @@ const BigEditableRecipeCard = ({
             IMAGE:
           </label>
           <input
+            type="file"
+            className="edit-form__button-upload"
+            onChange={(e) => handleImageInput(e)}
+          />
+          {/* <input
             type="text"
             id="image"
             className="edit-form__input-title"
             value={editedImage}
             onChange={(e) => setEditedImage(e.target.value)}
-          />
+          /> */}
         </div>
         <div className="edit-form__section">
           <label className="edit-form__input-label" for="title">

@@ -191,6 +191,55 @@
   padding-left: 0.15rem;
 }
 
+
+/* file upload styling */
+
+.edit-form__button-upload::-webkit-file-upload-button {
+  visibility: hidden;
+}
+.edit-form__button-upload::before {
+  content: 'Upload picture';
+  display: inline-block;
+  background: var(--secondary-navbar-color);
+  /* border: 1px solid #999; */
+  border-radius: 16px;
+ 
+  outline: none;
+  white-space: nowrap;
+  -webkit-user-select: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  margin: 4px 2px;
+  margin-top: 25px; 
+  padding: 10px 20px;
+  text-decoration: none;
+  /* text-shadow: 1px 1px #fff; */
+  border: none;
+  font-size: 10pt;
+  color: white;
+
+  /* background-color: var(--secondary-navbar-color);
+  border: none;
+
+  
+  text-align: center;
+  
+  display: inline-block;
+*/
+
+
+
+}
+.edit-form__button-upload:hover::before {
+  border-color: black;
+}
+.edit-form__button-upload:active::before {
+  background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+}
+
+
+
+
 @media (max-width: 960px) {
   .edit-form__section {
     width: 100%;

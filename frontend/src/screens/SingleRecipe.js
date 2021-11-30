@@ -34,7 +34,7 @@ function SingleRecipe() {
     try {
       await dispatch(confirmLoggedIn()); // handle entering the Recipe we dont have access to - right now it's not fething but no info you cant get that one (created by someone else + private)
 
-      let response = await fetch(
+      const response = await fetch(
         `http://localhost:5000/api/v1/recipe//recipe=${recipe_id}`,
         {
           method: "GET",
@@ -45,7 +45,7 @@ function SingleRecipe() {
         }
       );
       const data = await response.json();
-      
+
       setRecipe(data[0]);
       setIsLoading(false);
     } catch (error) {

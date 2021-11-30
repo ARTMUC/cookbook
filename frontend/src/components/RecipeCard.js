@@ -23,7 +23,11 @@ function RecipeCard({
         key={_id}
         onClick={() => handleOpenSingleRecipe(_id)}
       >
-        <img className="recipe__image" src={image} />
+        <div className = 'recipe__picture-container'>
+        <div className="recipe__picture-placeholder">  </div>
+        {/* <img className="recipe__image" src={image} /> */}
+        <img className="recipe__picture-image" src={image} />
+        </div>
         <h2 className="recipe__title">{title}</h2>
         <p className="recipe__description">
           {description.substring(0, 100) + "..."}

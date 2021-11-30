@@ -3,7 +3,6 @@ const { resolve } = require("path");
 
 const FILE_DIRECTORY = resolve(__dirname, "../utils/images");
 
-
 const Recipe = require("../models/Recipe");
 
 const getOneRecipe = async (req, res, next) => {
@@ -104,18 +103,34 @@ const editRecipe = async (req, res, next) => {
     const id = req.params.recipe_id;
     const date = new Date();
     const editedOn = { editedOn: date };
-    const { title, description, image, isShared, ingriedients } = req.body;
-    if (!title || !description || !image) {
+    // const { title, description, image, isShared, ingriedients } = req.body;
+
+    // if (!title || !description || !image) {
+    //   throw new Error("fields required");
+    // }
+    // const update = {
+    //   title,
+    //   description,
+    //   image,
+    //   isShared,
+    //   ingriedients,
+    //   ...editedOn,
+    // };
+
+    const { title, description, isShared, ingriedients } = req.body;
+    if (!title || !description) {
       throw new Error("fields required");
     }
     const update = {
       title,
       description,
-      image,
       isShared,
       ingriedients,
       ...editedOn,
     };
+
+    /// ///////
+
     let recipe = await Recipe.findOneAndUpdate(
       { _id: id, createdBy: email },
       update,
@@ -141,27 +156,21 @@ const removeRecipe = async (req, res, next) => {
   }
 };
 
-const getImage = async (req,res,next) =>{
-
-  ///
-  function getRandomIntInclusive(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1) + min); //The maximum is inclusive and the minimum is inclusive
-  }
-///
-
-
+const getImage = async (req, res, next) => {
   const image_id = req.params.image_id;
   const imagePath = resolve(FILE_DIRECTORY, `${image_id}`);
   const image = await readFile(imagePath);
-  setTimeout(()=>{
-    res.writeHead(200, {'Content-Type': 'image/gif' });
-    res.end(image, 'binary');
-  },getRandomIntInclusive(100,10000))
 
+  res.writeHead(200, { "Content-Type": "image/gif" });
+  res.end(image, "binary");
+};
 
-}
+const uploadImage = async (req, res, next) => {
+  const image = req.file;
+  // await writeFile("image.jpg", image);
+  console.log(image);
+  res.json({ message: "image uploaded" });
+};
 
 module.exports = {
   getOneRecipe,
@@ -171,4 +180,5 @@ module.exports = {
   editRecipe,
   removeRecipe,
   getImage,
+  uploadImage,
 };

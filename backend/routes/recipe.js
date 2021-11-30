@@ -1,4 +1,7 @@
 const express = require("express");
+const multer = require("multer");
+const storage = multer.memoryStorage();
+const imgFile = multer({ dest: 'uploads/' });
 
 const router = express.Router();
 const {
@@ -9,10 +12,9 @@ const {
   editRecipe,
   removeRecipe,
   getImage,
+  uploadImage,
 } = require("../controller/recipe");
 const Recipe = require("../models/Recipe");
-
-
 
 // get one recipe (my or shared)    GET
 // get all my recipes   GET
@@ -30,10 +32,9 @@ router
   .get(getOneRecipe)
   .patch(editRecipe)
   .delete(removeRecipe);
- 
-  router
-  .route("/image=:image_id")
-  .get(getImage);
 
+router.route("/image=:image_id").get(getImage);
+
+router.route("/image").post(imgFile.single("myFile"), uploadImage);
 
 module.exports = router;
