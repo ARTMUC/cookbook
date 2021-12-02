@@ -27,7 +27,7 @@ body {
   --secondary-navbar-color: #47355A;
   --main-navbar-gradient: linear-gradient(15deg, #563879 0%, #47355A 100%);
   /* --main-body-gradient: linear-gradient(15deg, #2b2b2b 0%, #363138 100%); */
-  --main-body-gradient: linear-gradient(15deg, #7b718f 0%, #6e6483 100%);
+  --main-body-gradient: linear-gradient(15deg, #b0aabb 0%, #d5caec 100%);
   --main-danger-color: #e90d0d;
   --secondary-danger-color: #e74141;
   --main-positive-color: #11A311;

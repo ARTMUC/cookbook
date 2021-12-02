@@ -1,3 +1,20 @@
+.big-recipe_background {
+  width: 100%;
+  min-height: 100vh;
+
+  filter: blur(50px);
+  -webkit-filter: blur(50px);
+  position: absolute;
+  background-repeat: repeat;
+  left: 0px;
+  top: 100px;
+  background-size: 100% 100%;
+  object-fit: cover;
+
+  /* hack to make div fill the entire height BUT IT DOEN'T WORK - NEEDS TO FIND SOMETHING DIFFERENT!!! */
+  padding-bottom: 70%;
+}
+
 .big-recipe {
   display: grid;
 
@@ -19,6 +36,7 @@
   margin-top: 50px;
 
   margin-bottom: 50px;
+  position: relative;
 }
 
 /* big-recipe__baner a */
@@ -51,6 +69,7 @@
   border-radius: 25px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   border: 3px solid var(--secondary-navbar-color);
+  background-image: var(--main-body-gradient);
 }
 
 .big-recipe__info-title {
@@ -103,6 +122,7 @@
   border-radius: 25px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   border: 3px solid var(--secondary-navbar-color);
+  background-image: var(--main-body-gradient);
 }
 
 .big-recipe__ingriedients-list {
@@ -116,6 +136,7 @@
   border-radius: 25px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   border: 3px solid var(--secondary-navbar-color);
+  background-image: var(--main-body-gradient);
 }
 
 .big-recipe__main-description {

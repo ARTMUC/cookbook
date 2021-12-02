@@ -12,6 +12,12 @@ const BigRecipeCard = ({
 }) => {
   return (
     <>
+      <div
+        className="big-recipe_background"
+        style={{
+          backgroundImage: `url(${image})`,
+        }}
+      ></div>
       <div className="big-recipe">
         <div className="big-recipe__baner">
           <img className="big-recipe__baner-image" src={image} />
