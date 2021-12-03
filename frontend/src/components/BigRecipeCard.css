@@ -2,31 +2,28 @@
   width: 100%;
   min-height: 100vh;
 
-  filter: blur(50px);
-  -webkit-filter: blur(50px);
-  position: absolute;
+  filter: blur(40px);
+  -webkit-filter: blur(40px);
+  position: fixed;
   background-repeat: repeat;
   left: 0px;
   top: 100px;
   background-size: 100% 100%;
   object-fit: cover;
-
-  /* hack to make div fill the entire height BUT IT DOEN'T WORK - NEEDS TO FIND SOMETHING DIFFERENT!!! */
-  padding-bottom: 70%;
 }
 
 .big-recipe {
   display: grid;
 
-  grid-template-rows: 60vh 1fr 1fr;
+  grid-template-rows: 60vh 0.1fr 1fr;   
   grid-template-columns: 0.25fr 1fr;
 
   grid-template-areas:
     "a a"
-    "b d"
-    "c d";
+    "b c"
+    "d d";
 
-  gap: 20px;
+  /* gap: 20px; */
   height: 100%;
 
   /* color: white; */
@@ -46,29 +43,29 @@
 .big-recipe__baner {
   grid-area: a;
   display: inline-grid;
-  border-radius: 25px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  border: 3px solid var(--secondary-navbar-color);
+  /* border-radius: 25px; */
+  /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
+  /* border: 3px solid var(--secondary-navbar-color); */
 }
 
 .big-recipe__baner-image {
   width: 100%;
-  height: calc(60vh - 6px);
+  height: 60vh;
   /* height: 100%; */
   object-fit: cover;
   object-position: 50% 25%;
   /* background-image: var(--main-body-gradient); */
   /* border: 5px solid #7b718f; */
   /* padding: 5px; */
-  border-radius: 23px;
+  border-radius: 25px 25px 0px 0px ;
 }
 
 .big-recipe__info {
   grid-area: b;
   display: inline-grid;
-  border-radius: 25px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  border: 3px solid var(--secondary-navbar-color);
+  /* border-radius: 25px; */
+  /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
+  /* border: 3px solid var(--secondary-navbar-color); */
   background-image: var(--main-body-gradient);
 }
 
@@ -119,9 +116,9 @@
 .big-recipe__ingriedients {
   grid-area: c;
   display: inline-grid;
-  border-radius: 25px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  border: 3px solid var(--secondary-navbar-color);
+  /* border-radius: 25px; */
+  /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
+  /* border: 3px solid var(--secondary-navbar-color); */
   background-image: var(--main-body-gradient);
 }
 
@@ -133,9 +130,9 @@
 .big-recipe__main {
   grid-area: d;
   display: inline-grid;
-  border-radius: 25px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  border: 3px solid var(--secondary-navbar-color);
+  /* border-radius: 25px; */
+  /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
+  /* border: 3px solid var(--secondary-navbar-color); */
   background-image: var(--main-body-gradient);
 }
 
@@ -150,25 +147,29 @@
 
 @media (max-width: 960px) {
   .big-recipe {
-    grid-template-rows: 60vh 0.4fr 1fr;
+    grid-template-rows: 60vh 0.2fr 0.2fr 1fr;
     grid-template-columns: 1fr 1fr;
     grid-template-areas:
       "a a"
-      "b c"
+      "b b"
+      "c c"
       "d d";
   }
 }
 
 @media (max-width: 500px) {
   .big-recipe {
-    grid-template-rows: 30vh 0.4fr 1fr;
+    grid-template-rows: 30vh 0.2fr 0.2fr 1fr;
     grid-template-columns: 1fr 1fr;
     grid-template-areas:
       "a a"
-      "b c"
+      "b b"
+      "c c"
       "d d";
   }
   .big-recipe__baner-image {
+
     height: calc(30vh - 6px);
+ 
   }
 }
