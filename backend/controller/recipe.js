@@ -1,9 +1,10 @@
-const { readFile, writeFile } = require("fs").promises;
+const { readFile, unlink } = require("fs").promises;
 const { resolve } = require("path");
 
-const FILE_DIRECTORY = resolve(__dirname, "../utils/images");
-
+const CustomError = require("../errors/CustomError");
 const Recipe = require("../models/Recipe");
+
+const FILE_DIRECTORY = resolve(__dirname, "../utils/images");
 
 const getOneRecipe = async (req, res, next) => {
   try {
@@ -12,11 +13,10 @@ const getOneRecipe = async (req, res, next) => {
     if (recipe[0].createdBy == req.user.email || recipe[0].isShared == true) {
       res.json(recipe);
     } else {
-      throw new Error("no access man");
+      throw new CustomError("no access", 401);
     }
   } catch (error) {
-    console.log(error);
-    res.json("error");
+    next(error);
   }
 };
 
@@ -57,8 +57,7 @@ const getAllMyRecipes = async (req, res, next) => {
 
     //////////////////////////
   } catch (error) {
-    console.log(error);
-    res.json("error");
+    next(error);
   }
 };
 const getAllSharedRecipes = async (req, res, next) => {
@@ -78,8 +77,7 @@ const getAllSharedRecipes = async (req, res, next) => {
 
     //////////
   } catch (error) {
-    console.log(error);
-    res.json("error");
+    next(error);
   }
 };
 
@@ -93,57 +91,58 @@ const createRecipe = async (req, res, next) => {
     await Recipe.create({ ...recipe, ...createdBy, ...createdOn });
     res.json({ ...recipe, ...createdBy });
   } catch (error) {
-    console.log(error);
-    res.json("error");
+    next(error);
   }
 };
 const editRecipe = async (req, res, next) => {
   try {
+    const imageName = req.file ? req.file.filename : null;
+    const imagePath = req.file ? req.file.path : null;
+
     const { email } = req.user;
     const id = req.params.recipe_id;
     const date = new Date();
     const editedOn = { editedOn: date };
-    // const { title, description, image, isShared, ingriedients } = req.body;
+    const { title, description, image, isShared, ingriedients } = JSON.parse(
+      req.body.patchData
+    );
 
-    // if (!title || !description || !image) {
-    //   throw new Error("fields required");
-    // }
-    // const update = {
-    //   title,
-    //   description,
-    //   image,
-    //   isShared,
-    //   ingriedients,
-    //   ...editedOn,
-    // };
+    const newImageLink = imageName
+      ? `http://localhost:5000/api/v1/recipe/image=${imageName}`
+      : image;
 
-    const { title, description, isShared, ingriedients } = req.body;
     if (!title || !description) {
-      throw new Error("fields required");
+      throw new CustomError("fields required", 400);
     }
     const update = {
       title,
       description,
+      image: newImageLink,
       isShared,
       ingriedients,
       ...editedOn,
     };
 
-    /// ///////
+    // TO DO :  ULNIK OLD FILE FROM THE SERVER!!!!!
 
-    let recipe = await Recipe.findOneAndUpdate(
+    const recipe = await Recipe.findOneAndUpdate(
       { _id: id, createdBy: email },
       update,
-      {
-        new: true,
-      }
+      { new: true }
     );
+
+    const oldImageRequestSplit = image.split("=");
+    const oldImageFileName = oldImageRequestSplit[1];
+    const oldImagePath = resolve(FILE_DIRECTORY, `./${oldImageFileName}`);
+    await unlink(oldImagePath);
+
     res.json(recipe);
   } catch (error) {
+    //  next(error);
     console.log(error);
-    res.json("error");
   }
 };
+
 const removeRecipe = async (req, res, next) => {
   try {
     const { email } = req.user;
@@ -151,25 +150,21 @@ const removeRecipe = async (req, res, next) => {
     await Recipe.deleteOne({ _id: id, createdBy: email });
     res.json("success - remove");
   } catch (error) {
-    console.log(error);
-    res.json("error");
+    next(error);
   }
 };
 
 const getImage = async (req, res, next) => {
-  const image_id = req.params.image_id;
-  const imagePath = resolve(FILE_DIRECTORY, `${image_id}`);
-  const image = await readFile(imagePath);
+  try {
+    const image_id = req.params.image_id;
+    const imagePath = resolve(FILE_DIRECTORY, `${image_id}`);
+    const image = await readFile(imagePath);
 
-  res.writeHead(200, { "Content-Type": "image/gif" });
-  res.end(image, "binary");
-};
-
-const uploadImage = async (req, res, next) => {
-  const image = req.file;
-  // await writeFile("image.jpg", image);
-  console.log(image);
-  res.json({ message: "image uploaded" });
+    res.writeHead(200, { "Content-Type": "image/gif" });
+    res.end(image, "binary");
+  } catch (error) {
+    next(error);
+  }
 };
 
 module.exports = {
@@ -180,5 +175,4 @@ module.exports = {
   editRecipe,
   removeRecipe,
   getImage,
-  uploadImage,
 };

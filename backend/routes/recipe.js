@@ -1,7 +1,5 @@
 const express = require("express");
-const multer = require("multer");
-const storage = multer.memoryStorage();
-const imgFile = multer({ dest: 'uploads/' });
+const { imageUpload } = require("../config/multer");
 
 const router = express.Router();
 const {
@@ -30,11 +28,9 @@ router.route("/shared/:page").get(getAllSharedRecipes);
 router
   .route("/recipe=:recipe_id")
   .get(getOneRecipe)
-  .patch(editRecipe)
+  .patch(imageUpload.single("image"),editRecipe)
   .delete(removeRecipe);
 
 router.route("/image=:image_id").get(getImage);
-
-router.route("/image").post(imgFile.single("myFile"), uploadImage);
 
 module.exports = router;

@@ -17,9 +17,9 @@ const BigEditableRecipeCard = ({
   const [editedDescription, setEditedDescription] = useState(description);
   const [editedIsShared, setEditedIsShared] = useState(isShared);
   const [editedIngredients, setEditedIngredients] = useState([...ingriedients]);
+  const [uploadedImage, setUploadedImage] = useState("");
 
   const changeRecipeIngriedients = (text, index) => {
-    console.log("fired");
     const ingriedientsArr = [...editedIngredients];
     ingriedientsArr[index] = text;
     setEditedIngredients([...ingriedientsArr]);
@@ -40,36 +40,29 @@ const BigEditableRecipeCard = ({
 
   const handleEditSingleRecipe = async () => {
     try {
-      await fetch(`http://localhost:5000/api/v1/recipe//recipe=${recipe_id}`, {
-        method: "PATCH",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title: editedTitle,
-          description: editedDescription,
-          // image: editedImage,
-          isShared: editedIsShared,
-          ingriedients: [...editedIngredients],
-        }),
+      const image = uploadedImage;
+      const formData = new FormData();
+      const patchData = JSON.stringify({
+        title: editedTitle,
+        description: editedDescription,
+        image: editedImage,
+        isShared: editedIsShared,
+        ingriedients: [...editedIngredients],
       });
 
-  const image = editedImage;
-      const formData = new FormData();
-      formData.append("myFile", image[0]);
+      formData.append("image", image[0]);
+      formData.append("patchData", patchData);
+
       const response = await fetch(
-        `http://localhost:5000/api/v1/recipe/image`,
+        `http://localhost:5000/api/v1/recipe//recipe=${recipe_id}`,
         {
-          method: "POST",
+          method: "PATCH",
           credentials: "include",
           body: formData,
         }
       );
       const data = await response.json();
       console.log(data);
-
-
 
       await fetchRecipesData();
       handleToggleEditSingleRecipe();
@@ -95,32 +88,7 @@ const BigEditableRecipeCard = ({
   };
 
   const handleImageInput = async (e) => {
-
-    setEditedImage(e.target.files)
-
-
-
-
-
-
-
-    // try {
-    //   const image = e.target.files;
-    //   const formData = new FormData();
-    //   formData.append("myFile", image[0]);
-    //   const response = await fetch(
-    //     `http://localhost:5000/api/v1/recipe/image`,
-    //     {
-    //       method: "POST",
-    //       credentials: "include",
-    //       body: formData,
-    //     }
-    //   );
-    //   const data = await response.json();
-    //   console.log(data);
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    setUploadedImage(e.target.files);
   };
 
   return (
@@ -135,13 +103,6 @@ const BigEditableRecipeCard = ({
             className="edit-form__button-upload"
             onChange={(e) => handleImageInput(e)}
           />
-          {/* <input
-            type="text"
-            id="image"
-            className="edit-form__input-title"
-            value={editedImage}
-            onChange={(e) => setEditedImage(e.target.value)}
-          /> */}
         </div>
         <div className="edit-form__section">
           <label className="edit-form__input-label" for="title">
