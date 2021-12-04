@@ -34,6 +34,8 @@
 
   margin-bottom: 50px;
   position: relative;
+  background-image: var(--main-body-gradient);
+  border-radius: 25px 25px 0px 0px ;
 }
 
 /* big-recipe__baner a */
@@ -46,6 +48,7 @@
   /* border-radius: 25px; */
   /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
   /* border: 3px solid var(--secondary-navbar-color); */
+  border-radius: 25px 25px 0px 0px ;
 }
 
 .big-recipe__baner-image {
@@ -66,7 +69,7 @@
   /* border-radius: 25px; */
   /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
   /* border: 3px solid var(--secondary-navbar-color); */
-  background-image: var(--main-body-gradient);
+  /* background-image: var(--main-body-gradient); */
 }
 
 .big-recipe__info-title {
@@ -119,7 +122,7 @@
   /* border-radius: 25px; */
   /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
   /* border: 3px solid var(--secondary-navbar-color); */
-  background-image: var(--main-body-gradient);
+  /* background-image: var(--main-body-gradient); */
 }
 
 .big-recipe__ingriedients-list {
@@ -133,7 +136,7 @@
   /* border-radius: 25px; */
   /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
   /* border: 3px solid var(--secondary-navbar-color); */
-  background-image: var(--main-body-gradient);
+  /* background-image: var(--main-body-gradient); */
 }
 
 .big-recipe__main-description {
@@ -147,7 +150,7 @@
 
 @media (max-width: 960px) {
   .big-recipe {
-    grid-template-rows: 60vh 0.2fr 0.2fr 1fr;
+    grid-template-rows: 60vh 0.2fr 1fr;
     grid-template-columns: 1fr 1fr;
     grid-template-areas:
       "a a"
@@ -159,7 +162,7 @@
 
 @media (max-width: 500px) {
   .big-recipe {
-    grid-template-rows: 30vh 0.2fr 0.2fr 1fr;
+    grid-template-rows: 30vh 0.2fr 1fr;
     grid-template-columns: 1fr 1fr;
     grid-template-areas:
       "a a"
@@ -169,7 +172,7 @@
   }
   .big-recipe__baner-image {
 
-    height: calc(30vh - 6px);
+    height:30vh;
  
   }
 }
