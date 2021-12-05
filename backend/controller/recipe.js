@@ -25,16 +25,9 @@ const getAllMyRecipes = async (req, res, next) => {
     const { email } = req.user;
     const createdBy = { createdBy: email };
 
-    //////////////////////////
     const count = await Recipe.countDocuments({ ...createdBy });
     const resultsPerPage = 8;
-    // let totalPages
-    // if (count){
-    //    totalPages = Math.ceil(count / resultsPerPage)
-    // } else {  totalPages = 1}
-
     const totalPages = count ? Math.ceil(count / resultsPerPage) : 1;
-
     let page;
     if (req.params.page <= 1) {
       page = 0;
@@ -50,12 +43,10 @@ const getAllMyRecipes = async (req, res, next) => {
 
     const recipes = await Recipe.find({ ...createdBy })
       //   .select("title")    // here we can pass array of obj keys - lets try to add the filter later to the params
-      .sort({ ...sortingParams }) //figure out sorting by diffferent keys
+      .sort({ ...sortingParams })
       .limit(resultsPerPage)
       .skip(resultsPerPage * page);
     res.status(200).json({ totalPages, page, resultsPerPage, count, recipes });
-
-    //////////////////////////
   } catch (error) {
     next(error);
   }
@@ -123,23 +114,23 @@ const editRecipe = async (req, res, next) => {
       ...editedOn,
     };
 
-    // TO DO :  ULNIK OLD FILE FROM THE SERVER!!!!!
-
     const recipe = await Recipe.findOneAndUpdate(
       { _id: id, createdBy: email },
       update,
       { new: true }
     );
 
-    const oldImageRequestSplit = image.split("=");
-    const oldImageFileName = oldImageRequestSplit[1];
-    const oldImagePath = resolve(FILE_DIRECTORY, `./${oldImageFileName}`);
-    await unlink(oldImagePath);
+    if(imageName){
+      const oldImageRequestSplit = image.split("=");
+      const oldImageFileName = oldImageRequestSplit[1];
+      const oldImagePath = resolve(FILE_DIRECTORY, `./${oldImageFileName}`);
+      await unlink(oldImagePath);
+    }
+  
 
     res.json(recipe);
   } catch (error) {
-    //  next(error);
-    console.log(error);
+    next(error);
   }
 };
 
