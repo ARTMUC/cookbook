@@ -1,25 +1,48 @@
+.recipe__container {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  align-content: start;
+  list-style-type: none;
+}
 
+.recipe__container__loader-circle {
+  border: 3px solid #7c7c7c; /* Light grey */
+  border-top: 3px solid #191a1a; /* Blue */
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 2s linear infinite;
+}
 
-  .recipe__container {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    align-content: start;
-    list-style-type: none;
-    
-  }
+.recipe__container__button-add {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  border-radius: 100%;
+  width: 60px;
+  height: 60px;
+  margin: 10px;
+  cursor: pointer;
+  background-color: var(--secondary-navbar-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
 
-  .recipe__container__loader-circle {
- 
-    border: 3px solid #7c7c7c; /* Light grey */
-    border-top: 3px solid #191a1a; /* Blue */
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    animation: spin 2s linear infinite;
-  }
-  
+.recipe__container__button-badge {
 
-  
+  border-radius: 100%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  color: white;
+  z-index: 1000;
+}
+
+.recipe__container__button-add:hover {
+  background-color: var(--main-navbar-color);
+}

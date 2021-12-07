@@ -8,7 +8,7 @@
   margin: 20px;
   /* width: 80%; */
   min-height: 50px;
-  
+
   list-style-type: none;
   display: flex;
   align-items: center;
@@ -26,6 +26,7 @@
   border-radius: 20px;
   margin: 10px;
   text-align: center;
+  cursor: pointer;
 }
 .container-hub__element-select:hover {
   background-color: var(--main-navbar-color);
@@ -39,8 +40,8 @@
 }
 
 .container-hub__element-navigation {
-   display: flex;
-   border-radius: 16px;
+  display: flex;
+  border-radius: 16px;
   text-transform: uppercase;
   margin: 4px 4px 4px 20px;
 }
@@ -59,7 +60,7 @@
   font-size: 16px;
   text-align: center;
 }
-.container-hub__button-left:hover{
+.container-hub__button-left:hover {
   background-color: var(--main-navbar-color);
 }
 .container-hub__button-right {
@@ -69,7 +70,7 @@
   text-align: center;
   cursor: pointer;
   border-radius: 0px 16px 16px 0px;
-  
+
   color: white;
   padding: 12px;
   min-width: 100px;
@@ -77,10 +78,9 @@
   text-align: center;
 }
 
-.container-hub__button-right:hover{
+.container-hub__button-right:hover {
   background-color: var(--main-navbar-color);
 }
-
 
 .container-hub__page-counter {
   display: inline-block;
@@ -91,5 +91,5 @@
   color: white;
   text-transform: uppercase;
   text-align: center;
- 
 }
+

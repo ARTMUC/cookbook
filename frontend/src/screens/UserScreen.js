@@ -5,6 +5,8 @@ import UserHub from "../components/UserHub";
 
 import { useState } from "react";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { MdAddCircleOutline } from "react-icons/md";
 // react - redux
 import { useSelector, useDispatch } from "react-redux";
 import { login, logout, confirmLoggedIn } from "../redux/actions/authActions";
@@ -23,6 +25,7 @@ function UserScreen() {
   const [recipes, setRecipes] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(0);
+  const [serverErrorMessage, setServerErrorMessage] = useState("");
 
   const changePage = (skip) => {
     setPage((currPage) => {
@@ -52,24 +55,32 @@ function UserScreen() {
           },
         }
       );
-
       const data = await response.json();
-      if (data.statusCode) {
-        throw new Error("please try again later");
-      } else {
-        setRecipes(data.recipes);
-        setTotalPages(data.totalPages);
-        setCurrentPage(data.page);
-        
+
+      switch (response.status) {
+        case 401:
+          return await dispatch(logout());
+        case 500:
+          throw new Error("server error - please try again later");
+        default:
+          console.log("unhandled");
+          break;
       }
+      setRecipes(data.recipes);
+      setTotalPages(data.totalPages);
+      setCurrentPage(data.page);
     } catch (error) {
-      console.log(error);
+      setServerErrorMessage(error.message);
     }
   };
 
+const handleAddRecipe = () => {
+  console.log('added')
+}
+
+
   useEffect(() => {
     (async () => {
-      await dispatch(confirmLoggedIn());
       await fetchRecipesData(page, sortParams);
       setIsLoading(false);
     })();
@@ -87,17 +98,20 @@ function UserScreen() {
             sortParams={sortParams}
             currentPage={currentPage}
             totalPages={totalPages}
+            handleAddRecipe={handleAddRecipe}
           />
-{  recipes[0] ? (<ul className="recipe__container">
-            {recipes.map((recipe) => (
-              <RecipeCard {...recipe} />
-            ))}{" "}
-          </ul>): <div>Nothing to load</div>}
-
-
-        
+          {recipes[0] && (
+            <ul className="recipe__container">
+              {recipes.map((recipe) => (
+                <RecipeCard {...recipe} />
+              ))}{" "}
+            </ul>
+          )}
+          {serverErrorMessage && <p>{serverErrorMessage}</p>}
+           <Link to="/create-new" className="recipe__container__button-add"><MdAddCircleOutline className="recipe__container__button-badge"/> </Link>
         </>
       )}
+        
     </>
   );
 }

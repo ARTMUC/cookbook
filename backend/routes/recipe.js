@@ -23,7 +23,7 @@ const Recipe = require("../models/Recipe");
 
 router.route("/page=:page").get(getAllMyRecipes);
 
-router.route("/").post(createRecipe);
+router.route("/").post(imageUpload.single("image"),createRecipe);
 router.route("/shared/:page").get(getAllSharedRecipes);
 router
   .route("/recipe=:recipe_id")

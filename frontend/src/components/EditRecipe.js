@@ -1,8 +1,8 @@
-import "./BigEditableRecipeCard.css";
+import "./EditRecipe.css";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
-const BigEditableRecipeCard = ({
+const EditRecipe = ({
   image,
   title,
   description,
@@ -207,4 +207,4 @@ const BigEditableRecipeCard = ({
   );
 };
 
-export default BigEditableRecipeCard;
+export default EditRecipe;

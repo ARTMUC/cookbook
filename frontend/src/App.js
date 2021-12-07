@@ -10,6 +10,7 @@ import BackDrop from "./components/BackDrop";
 import SingleRecipe from "./screens/SingleRecipe";
 import RegisterScreen from "./screens/RegisterScreen";
 import LoginScreen from "./screens/LoginScreen";
+import CreateRecipe from "./screens/CreateRecipe";
 
 import { useState } from "react";
 
@@ -64,6 +65,7 @@ function App() {
       <main className="container--text">
         <Switch>
           <Route exact path="/" component={HomeScreen} />
+          <Route exact path="/create-new" component={CreateRecipe} />
           <Route exact path="/login-screen" component={LoginScreen} />
           <Route exact path="/register-screen" component={RegisterScreen} />
           <PrivateRoute path="/user-screen" component={UserScreen} />

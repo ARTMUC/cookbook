@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 import BigRecipeCard from "../components/BigRecipeCard";
-import BigEditableRecipeCard from "../components/BigEditableRecipeCard";
+import EditRecipe from "../components/EditRecipe";
 
 // react - redux
 import { useSelector, useDispatch } from "react-redux";
@@ -25,6 +25,7 @@ function SingleRecipe() {
   const [isEditable, setIsEditable] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
+  const [serverErrorMessage, setServerErrorMessage] = useState("");
 
   const handleToggleEditSingleRecipe = () => {
     setIsEditing((prev) => !prev);
@@ -32,8 +33,6 @@ function SingleRecipe() {
 
   const fetchRecipesData = async () => {
     try {
-      await dispatch(confirmLoggedIn()); // handle entering the Recipe we dont have access to - right now it's not fething but no info you cant get that one (created by someone else + private)
-
       const response = await fetch(
         `http://localhost:5000/api/v1/recipe//recipe=${recipe_id}`,
         {
@@ -46,18 +45,33 @@ function SingleRecipe() {
       );
       const data = await response.json();
 
-      setRecipe(data[0]);
-      setIsLoading(false);
+      switch (response.status) {
+        case 401:
+          return await dispatch(logout());
+        case 403:
+          throw new Error("recipe not found");
+        case 404:
+          throw new Error("recipe not found");
+        case 500:
+          throw new Error("server error - please try again later");
+        default:
+          console.log("unhandled");
+          break;
+      }
+
+      setRecipe(data);
     } catch (error) {
-      console.log(error);
+      setServerErrorMessage(error.message);
     }
   };
 
   useEffect(() => {
     (async () => {
       await fetchRecipesData();
+      window.scrollTo(0, 0);
+      setIsLoading(false);
     })();
-  }, []);
+  }, [isEditing]);
 
   useEffect(() => {
     if (isLoading === false && userEmail === recipe.createdBy) {
@@ -71,19 +85,24 @@ function SingleRecipe() {
       {isLoading ? (
         <div>Loading...</div>
       ) : isEditing ? (
-        <BigEditableRecipeCard
-          {...recipe}
-          isEditable={isEditable}
-          handleToggleEditSingleRecipe={handleToggleEditSingleRecipe}
-          fetchRecipesData={fetchRecipesData}
-        />
+        recipe && (
+          <EditRecipe
+            {...recipe}
+            isEditable={isEditable}
+            handleToggleEditSingleRecipe={handleToggleEditSingleRecipe}
+            fetchRecipesData={fetchRecipesData}
+          />
+        )
       ) : (
-        <BigRecipeCard
-          {...recipe}
-          isEditable={isEditable}
-          handleToggleEditSingleRecipe={handleToggleEditSingleRecipe}
-        />
+        recipe && (
+          <BigRecipeCard
+            {...recipe}
+            isEditable={isEditable}
+            handleToggleEditSingleRecipe={handleToggleEditSingleRecipe}
+          />
+        )
       )}
+      {serverErrorMessage && <p>{serverErrorMessage}</p>}
     </>
   );
 }

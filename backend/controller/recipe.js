@@ -9,11 +9,16 @@ const FILE_DIRECTORY = resolve(__dirname, "../utils/images");
 const getOneRecipe = async (req, res, next) => {
   try {
     const id = req.params.recipe_id;
-    const recipe = await Recipe.find({ _id: id });
-    if (recipe[0].createdBy == req.user.email || recipe[0].isShared == true) {
+    paramLength = id.length;
+    if (paramLength !== 24) throw new CustomError("recipe not found", 404);
+
+    const recipe = await Recipe.findOne({ _id: id });
+
+    if (!recipe) throw new CustomError("recipe not found", 404);
+    if (recipe.createdBy == req.user.email || recipe.isShared == true) {
       res.json(recipe);
     } else {
-      throw new CustomError("no access", 401);
+      throw new CustomError("no access", 403);
     }
   } catch (error) {
     next(error);
@@ -42,7 +47,6 @@ const getAllMyRecipes = async (req, res, next) => {
     const sortingParams = Object.fromEntries([[sort, order]]);
 
     const recipes = await Recipe.find({ ...createdBy })
-      //   .select("title")    // here we can pass array of obj keys - lets try to add the filter later to the params
       .sort({ ...sortingParams })
       .limit(resultsPerPage)
       .skip(resultsPerPage * page);
@@ -53,20 +57,11 @@ const getAllMyRecipes = async (req, res, next) => {
 };
 const getAllSharedRecipes = async (req, res, next) => {
   try {
-    ////////
-    const resultsPerPage = 8;
-    let page = req.params.page >= 1 ? req.params.page : 1;
-    const query = req.query.search;
-    page = page - 1;
-
-    const recipes = await Recipe.find({ isShared: true })
-      //   .select("title")
-      .sort({ name: "asc" })
-      .limit(resultsPerPage)
-      .skip(resultsPerPage * page);
+    // const recipes = await Recipe.find({ isShared: true })
+    //   .sort({ name: "asc" })
+    //   .limit(resultsPerPage)
+    //   .skip(resultsPerPage * page);
     res.status(200).json(recipes);
-
-    //////////
   } catch (error) {
     next(error);
   }
@@ -74,13 +69,35 @@ const getAllSharedRecipes = async (req, res, next) => {
 
 const createRecipe = async (req, res, next) => {
   try {
+    const imageName = req.file ? req.file.filename : null;
     const { email } = req.user;
-    const createdBy = { createdBy: email };
-    const recipe = req.body;
+    const id = req.params.recipe_id;
     const date = new Date();
     const createdOn = { createdOn: date };
-    await Recipe.create({ ...recipe, ...createdBy, ...createdOn });
-    res.json({ ...recipe, ...createdBy });
+    const { title, description, image, isShared, ingriedients } = JSON.parse(
+      req.body.patchData
+    );
+
+    const newImageLink = imageName
+      ? `http://localhost:5000/api/v1/recipe/image=${imageName}`
+      : image;
+
+    if (!title.trim() || !description.trim()) {
+      throw new CustomError("fields required", 400);
+    }
+    const newRecipeInfo = {
+      title,
+      description,
+      createdBy: email,
+      image: newImageLink,
+      isShared,
+      ingriedients,
+      ...createdOn,
+    };
+
+    const newRecipe = new Recipe({ ...newRecipeInfo });
+    await newRecipe.save();
+    res.status(201).json("recipe created");
   } catch (error) {
     next(error);
   }
@@ -88,7 +105,6 @@ const createRecipe = async (req, res, next) => {
 const editRecipe = async (req, res, next) => {
   try {
     const imageName = req.file ? req.file.filename : null;
-    const imagePath = req.file ? req.file.path : null;
 
     const { email } = req.user;
     const id = req.params.recipe_id;
@@ -102,7 +118,7 @@ const editRecipe = async (req, res, next) => {
       ? `http://localhost:5000/api/v1/recipe/image=${imageName}`
       : image;
 
-    if (!title || !description) {
+    if (!title.trim() || !description.trim()) {
       throw new CustomError("fields required", 400);
     }
     const update = {
@@ -120,13 +136,12 @@ const editRecipe = async (req, res, next) => {
       { new: true }
     );
 
-    if(imageName){
+    if (imageName) {
       const oldImageRequestSplit = image.split("=");
       const oldImageFileName = oldImageRequestSplit[1];
       const oldImagePath = resolve(FILE_DIRECTORY, `./${oldImageFileName}`);
       await unlink(oldImagePath);
     }
-  
 
     res.json(recipe);
   } catch (error) {
@@ -138,8 +153,15 @@ const removeRecipe = async (req, res, next) => {
   try {
     const { email } = req.user;
     const id = req.params.recipe_id;
-    await Recipe.deleteOne({ _id: id, createdBy: email });
+    const { image } = await Recipe.findOneAndDelete({
+      _id: id,
+      createdBy: email,
+    });
     res.json("success - remove");
+    const oldImageRequestSplit = image.split("=");
+    const oldImageFileName = oldImageRequestSplit[1];
+    const oldImagePath = resolve(FILE_DIRECTORY, `./${oldImageFileName}`);
+    await unlink(oldImagePath);
   } catch (error) {
     next(error);
   }
