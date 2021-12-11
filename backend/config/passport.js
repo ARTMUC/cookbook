@@ -1,25 +1,21 @@
 const LocalStrategy = require("passport-local").Strategy;
-const User = require("../models/User");
-const bcrypt = require("bcryptjs");
 const CustomError = require("../errors/CustomError");
+const { UserRepository } = require("../api/userApi/repository/userRepo");
+const passport = require("passport");
+const { verifyPassword } = require("../utils/passwordCrypto");
 
-module.exports = (passport) => {
+const Repository = new UserRepository();
+
+const passportSetup = (app) => {
   const strategy = new LocalStrategy(
     {
       usernameField: "email",
-      //  passwordField: 'passwd',
     },
 
     async (email, password, done) => {
       try {
-        const user = await User.findOne({ email });
-        if (!user) {
-          throw new CustomError("Wrong email or password", 401);
-        }
-        const match = await bcrypt.compare(password, user.password);
-        if (!match) {
-          throw new CustomError("Wrong email or password", 401);
-        }
+        const user = await Repository.GetUser({ email });
+        await verifyPassword(password, user.password);
         return done(null, user);
       } catch (error) {
         return done(error);
@@ -33,14 +29,9 @@ module.exports = (passport) => {
     cb(null, user._id);
   });
 
-
-
   passport.deserializeUser(async (id, done) => {
     try {
-      const user = await User.findOne({ _id: id });
-      if (!user) {
-        throw new CustomError("Wrong email or password", 401);
-      }
+      const user = await Repository.GetUser({ _id: id });
       const userInformation = {
         email: user.email,
         isEmailConfirmed: user.isEmailConfirmed,
@@ -48,8 +39,14 @@ module.exports = (passport) => {
       };
       done(null, userInformation);
     } catch (error) {
-       done(error);
+      done(error);
     }
   });
 
+  app.use(passport.initialize());
+  app.use(passport.session());
 };
+
+const loginLocalStrategyMidd = passport.authenticate("local");
+
+module.exports = { passportSetup, loginLocalStrategyMidd };
