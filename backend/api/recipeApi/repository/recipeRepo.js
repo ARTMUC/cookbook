@@ -1,3 +1,6 @@
+// I switched to mySQL - leaving this for studying purposes
+
+
 const Recipe = require("../../../models/Recipe");
 const CustomError = require("../../../errors/CustomError");
 
@@ -26,6 +29,7 @@ class RecipeRepository {
   async FindAndSort(createdBy, sortingParams, resultsPerPage, page) {
     try {
       const doc = await Recipe.find({ ...createdBy })
+      .filter()
         .sort({ ...sortingParams })
         .limit(resultsPerPage)
         .skip(resultsPerPage * page);

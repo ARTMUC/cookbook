@@ -1,4 +1,4 @@
-const { UserRepository } = require("../repository/userRepo");
+const { UserRepository } = require("../repository/userRepoSQL");
 const CustomError = require("../../../errors/CustomError");
 const {
   sendConfirmationEmail,
@@ -14,7 +14,7 @@ class UserService {
   async Register(userInputs) {
     const { email, password } = userInputs;
     try {
-      await this.repository.CheckIfExists({ email });
+      await this.repository.CheckIfExists(email);
       const hashedPassword = await hashPassword(password);
       const emailConfirmationCode = await randomValue();
       await this.repository.SaveUser({
@@ -30,9 +30,9 @@ class UserService {
     }
   }
 
-  async ConfirmUserEmail(searchParams, updateInfo) {
+  async ConfirmUserEmail(confirmationId) {
     try {
-      const doc = await this.repository.UpdateUser(searchParams, updateInfo);
+      const doc = await this.repository.ConfirmUser(confirmationId);
       if (!doc)
         throw new CustomError(
           "Your confirmation link doesn't work. Please contact Administartor.",

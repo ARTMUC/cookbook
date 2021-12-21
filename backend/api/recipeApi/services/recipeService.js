@@ -1,4 +1,4 @@
-const { RecipeRepository } = require("../repository/recipeRepo");
+const { RecipeRepository } = require("../repository/recipeRepoSQL");
 const CustomError = require("../../../errors/CustomError");
 const { readFile, unlink } = require("fs").promises;
 const { resolve } = require("path");
@@ -9,14 +9,10 @@ class RecipeService {
   constructor() {
     this.repository = new RecipeRepository();
   }
-  async GetOneRecipe(id, user) {
+  async getOneRecipe(recipe_id, userId) {
     try {
-      const paramLength = id.length;
-      if (paramLength !== 24) throw new CustomError("recipe not found", 404);
-
-      const recipe = await this.repository.FindRecipe({ _id: id });
-      if (!recipe) throw new CustomError("recipe not found", 404);
-      if (recipe.createdBy !== user.email || recipe.isShared !== true)
+      const recipe = await this.repository.findRecipe(recipe_id);
+      if (!(recipe.user_id === userId || recipe.isShared === true))
         throw new CustomError("no access", 403);
       return recipe;
     } catch (err) {
@@ -26,15 +22,15 @@ class RecipeService {
     }
   }
 
-  async getAllRecipes(
-    searchParams,
+  async getAllUserRecipes(
+    userId,
     resultsPerPage,
     requestedPage,
     sortBy,
     order
   ) {
     try {
-      const count = await this.repository.CountDocuments({ ...searchParams });
+      const count = await this.repository.countDocumentsByUserId(userId);
 
       const totalPages = count ? Math.ceil(count / resultsPerPage) : 1;
       let page;
@@ -46,10 +42,11 @@ class RecipeService {
       } else {
         page = requestedPage - 1;
       }
-      const sortingParams = Object.fromEntries([[sortBy, order]]);
-      const recipes = await this.repository.FindAndSort(
-        searchParams,
-        sortingParams,
+
+      const recipes = await this.repository.findUserRecipesAndSort(
+        userId,
+        sortBy,
+        order,
         resultsPerPage,
         page
       );
@@ -60,31 +57,56 @@ class RecipeService {
       throw new Error(err.message);
     }
   }
-  async CreateRecipe(imageName, email, patchData) {
-    try {
-      const { title, description, image, isShared, ingriedients } =
-        JSON.parse(patchData);
 
-      const date = new Date();
-      const createdOn = { createdOn: date };
-      const newImageLink = imageName
+  async getAllSharedRecipes(
+    isShared,
+    resultsPerPage,
+    requestedPage,
+    sortBy,
+    order
+  ) {
+    try {
+      const count = await this.repository.countSharedRecipes(isShared);
+
+      const totalPages = count ? Math.ceil(count / resultsPerPage) : 1;
+      let page;
+      if (requestedPage <= 1) {
+        page = 0;
+      }
+      if (requestedPage >= totalPages) {
+        page = totalPages - 1;
+      } else {
+        page = requestedPage - 1;
+      }
+
+      const recipes = await this.repository.findSharedRecipesAndSort(
+        isShared,
+        sortBy,
+        order,
+        resultsPerPage,
+        page
+      );
+      return { totalPages, page, resultsPerPage, count, recipes };
+    } catch (err) {
+      if (err instanceof CustomError)
+        throw new CustomError(err.message, err.statusCode);
+      throw new Error(err.message);
+    }
+  }
+
+  async createRecipe(imageName, userId, recipehData) {
+    try {
+      const newRecipeData = JSON.parse(recipehData);
+      const imageLink = imageName
         ? `http://localhost:5000/api/v1/recipe/image=${imageName}`
         : image;
 
       if (!title.trim() || !description.trim()) {
         throw new CustomError("fields required", 400);
       }
-      const newRecipeInfo = {
-        title,
-        description,
-        createdBy: email,
-        image: newImageLink,
-        isShared,
-        ingriedients,
-        ...createdOn,
-      };
 
-      await this.repository.SaveRecipe(newRecipeInfo);
+      await this.repository.saveRecipe(newRecipeData, imageLink, userId);
+
       return;
     } catch (err) {
       if (err instanceof CustomError)
@@ -93,36 +115,20 @@ class RecipeService {
     }
   }
 
-  async EditRecipe(imageName, email, id, patchData) {
+  async editRecipe(imageName, userId, recipeId, patchData) {
     try {
-      const date = new Date();
-      const editedOn = { editedOn: date };
-      const { title, description, image, isShared, ingriedients } =
-        JSON.parse(patchData);
+      const recipePatchData = JSON.parse(patchData);
 
-      const newImageLink = imageName
+      const image = recipePatchData.image;
+      const imageLink = imageName
         ? `http://localhost:5000/api/v1/recipe/image=${imageName}`
         : image;
 
-      if (!title.trim() || !description.trim()) {
-        throw new CustomError("fields required", 400);
-      }
-      const searchInfo = {
-        id,
-        email,
-      };
-      const updateInfo = {
-        title,
-        description,
-        image: newImageLink,
-        isShared,
-        ingriedients,
-        ...editedOn,
-      };
-
-      const recipe = await this.repository.FindRecipeAndUpdate(
-        searchInfo,
-        updateInfo
+      const recipe = await this.repository.findRecipeAndUpdate(
+        recipeId,
+        userId,
+        recipePatchData,
+        imageLink
       );
 
       if (imageName) {
@@ -138,9 +144,12 @@ class RecipeService {
       throw new Error(err.message);
     }
   }
-  async RemoveRecipe(id, email) {
+  async removeRecipe(recipeId, userId) {
     try {
-      const { image } = await this.repository.FindRecipeAndDelete(id, email);
+      const image = await this.repository.findRecipeAndDelete(
+        recipeId,
+        userId
+      );
 
       const oldImageRequestSplit = image.split("=");
       const oldImageFileName = oldImageRequestSplit[1];

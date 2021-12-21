@@ -3,10 +3,10 @@ import React from "react";
 import { useState } from "react";
 
 function RecipeCard({
-  _id,
+  id,
   title,
   description,
-  image,
+  miniaturePhoto,
   isShared,
   createdBy,
   createdOn,
@@ -20,13 +20,13 @@ function RecipeCard({
     <>
       <li
         className="recipe"
-        key={_id}
-        onClick={() => handleOpenSingleRecipe(_id)}
+        key={id}
+        onClick={() => handleOpenSingleRecipe(id)}
       >
         <div className = 'recipe__picture-container'>
         <div className="recipe__picture-placeholder">  </div>
         {/* <img className="recipe__image" src={image} /> */}
-        <img className="recipe__picture-image" src={image} />
+        <img className="recipe__picture-image" src={miniaturePhoto} />
         </div>
         <h2 className="recipe__title">{title}</h2>
         <p className="recipe__description">

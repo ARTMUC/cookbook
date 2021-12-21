@@ -21,7 +21,7 @@ function UserScreen() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = useState(1);
-  const [sortParams, setSortParams] = useState("sort=createdOn&order=-1");
+  const [sortParams, setSortParams] = useState("sort=createdAt&order=DESC");
   const [recipes, setRecipes] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(0);

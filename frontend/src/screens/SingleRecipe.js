@@ -34,7 +34,7 @@ function SingleRecipe() {
   const fetchRecipesData = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/v1/recipe//recipe=${recipe_id}`,
+        `http://localhost:5000/api/v1/recipe/recipe=${recipe_id}`,
         {
           method: "GET",
           credentials: "include",

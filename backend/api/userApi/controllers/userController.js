@@ -41,10 +41,8 @@ const confirmEmail = async (req, res, next) => {
   const receivedConfirmationId = `${req.params.no}`;
 
   try {
-    await Service.ConfirmUserEmail(
-      { confirmation_Id: receivedConfirmationId },
-      { isEmailConfirmed: true }
-    );
+    await Service.ConfirmUserEmail(receivedConfirmationId)
+
     res.status(200).send("email confirmed");
   } catch (error) {
     return next(error);

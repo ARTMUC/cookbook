@@ -1,8 +1,10 @@
 const express = require("express");
 require("dotenv").config();
-const connectDB = require("./db/connect");
 const port = process.env.PORT;
 const {expressApp} = require('./expressApp');
+
+//databases
+const connectDB = require("./db/connect");
 
 (async () => {
   try {

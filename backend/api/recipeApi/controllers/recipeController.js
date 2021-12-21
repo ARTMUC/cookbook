@@ -4,10 +4,10 @@ const Service = new RecipeService();
 
 const getOneRecipe = async (req, res, next) => {
   try {
-    const id = req.params.recipe_id;
-    const user = req.user;
+    const {recipe_id} = req.params;
+    const {id:userId} = req.user;
 
-    const recipe = await Service.GetOneRecipe(id, user);
+    const recipe = await Service.getOneRecipe(recipe_id, userId);
 
     res.json(recipe);
   } catch (error) {
@@ -15,16 +15,15 @@ const getOneRecipe = async (req, res, next) => {
   }
 };
 
-const getAllMyRecipes = async (req, res, next) => {
+const getAllUserRecipes = async (req, res, next) => {
   try {
-    const { email } = req.user;
-    const createdBy = { createdBy: email };
+    const { id:userId } = req.user;
     const { sort, order } = req.query;
     const requestedPage = req.params.page;
     const resultsPerPage = 8;
 
-    const doc = await Service.getAllRecipes(
-      createdBy,
+    const doc = await Service.getAllUserRecipes(
+      userId,
       resultsPerPage,
       requestedPage,
       sort,
@@ -38,12 +37,12 @@ const getAllMyRecipes = async (req, res, next) => {
 };
 const getAllSharedRecipes = async (req, res, next) => {
   try {
-    const isShared = { isShared: true };
+    const isShared = 1;
     const { sort, order } = req.query;
     const requestedPage = req.params.page;
     const resultsPerPage = 8;
 
-    const doc = await Service.getAllRecipes(
+    const doc = await Service.getAllSharedRecipes(
       isShared,
       resultsPerPage,
       requestedPage,
@@ -59,11 +58,11 @@ const getAllSharedRecipes = async (req, res, next) => {
 
 const createRecipe = async (req, res, next) => {
   try {
+    // image is saved on the server using Multer as middleware
     const imageName = req.file ? req.file.filename : null;
-    const { email } = req.user;
+    const { id:userId } = req.user;
     const patchData = req.body.patchData;
-
-    await Service.CreateRecipe(imageName, email, patchData);
+    await Service.createRecipe(imageName, userId, patchData);
 
     res.status(201).json("recipe created");
   } catch (error) {
@@ -74,11 +73,12 @@ const createRecipe = async (req, res, next) => {
 const editRecipe = async (req, res, next) => {
   try {
     const imageName = req.file ? req.file.filename : null;
-    const { email } = req.user;
-    const id = req.params.recipe_id;
+    const { id:userId } = req.user;
+
+    const recipeId = req.params.recipe_id;
     const patchData = req.body.patchData;
 
-    const recipe = await Service.EditRecipe(imageName, email, id, patchData);
+    const recipe = await Service.editRecipe(imageName, userId, recipeId, patchData);
 
     res.status(200).json(recipe);
   } catch (error) {
@@ -88,10 +88,10 @@ const editRecipe = async (req, res, next) => {
 
 const removeRecipe = async (req, res, next) => {
   try {
-    const { email } = req.user;
-    const id = req.params.recipe_id;
+    const { id:userId } = req.user;
+    const recipeId = req.params.recipe_id;
 
-    await Service.RemoveRecipe(id, email);
+    await Service.removeRecipe(recipeId, userId);
 
     res.status(200).json("success - remove");
   } catch (error) {
@@ -114,7 +114,7 @@ const getImage = async (req, res, next) => {
 
 module.exports = {
   getOneRecipe,
-  getAllMyRecipes,
+  getAllUserRecipes,
   getAllSharedRecipes,
   createRecipe,
   editRecipe,

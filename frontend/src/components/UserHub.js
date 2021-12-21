@@ -38,25 +38,25 @@ const UserHub = ({
         >
           <option
             className="container-hub__element-option"
-            value="sort=createdOn&order=-1"
+            value="sort=createdAt&order=DESC"
           >
             newest
           </option>
           <option
             className="container-hub__element-option"
-            value="sort=createdOn&order=1"
+            value="sort=createdAt&order=ASC"
           >
             oldest
           </option>
           <option
             className="container-hub__element-option"
-            value="sort=title&order=asc"
+            value="sort=title&order=ASC"
           >
             a b c
           </option>
           <option
             className="container-hub__element-option"
-            value="sort=title&order=desc"
+            value="sort=title&order=DESC"
           >
             c b a
           </option>

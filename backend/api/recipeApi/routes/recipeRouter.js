@@ -4,7 +4,7 @@ const { imageUpload } = require("../../../config/multer");
 const router = express.Router();
 const {
   getOneRecipe,
-  getAllMyRecipes,
+  getAllUserRecipes,
   getAllSharedRecipes,
   createRecipe,
   editRecipe,
@@ -13,7 +13,7 @@ const {
 } = require("../controllers/recipeController");
 
 
-router.route("/page=:page").get(getAllMyRecipes);
+router.route("/page=:page").get(getAllUserRecipes);
 
 router.route("/").post(imageUpload.single("image"),createRecipe);
 router.route("/shared/page=:page").get(getAllSharedRecipes);

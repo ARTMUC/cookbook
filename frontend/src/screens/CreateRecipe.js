@@ -7,18 +7,30 @@ const CreateRecipe = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isShared, setIsShared] = useState(false);
-  const [ingredients, setIngredients] = useState([]);
+  const [ingredients, setIngredients] = useState([{}]);
   // const [uploadedImage, setUploadedImage] = useState("");
 
-  const changeRecipeIngriedients = (text, index) => {
+  const changeRecipeIngriedients = (name, index) => {
     const ingriedientsArr = [...ingredients];
-    ingriedientsArr[index] = text;
+    ingriedientsArr[index].name = name;
+    setIngredients([...ingriedientsArr]);
+  };
+
+  const changeIngriedientWeight = (weight, index) => {
+    const ingriedientsArr = [...ingredients];
+    ingriedientsArr[index].weight = weight;
+    setIngredients([...ingriedientsArr]);
+  };
+
+  const changeIngriedientKcal = (kcal, index) => {
+    const ingriedientsArr = [...ingredients];
+    ingriedientsArr[index].kcal = kcal;
     setIngredients([...ingriedientsArr]);
   };
 
   const addNewIngriedient = (e) => {
     e.preventDefault();
-    setIngredients((prev) => [...prev, ""]);
+    setIngredients((prev) => [...prev, {}]);
   };
 
   const removeIngriedient = (e, i) => {
@@ -105,16 +117,35 @@ const CreateRecipe = () => {
             INGRIEDIENTS:
           </label>
           <div>
-            {ingredients.map((ingredient, index) => {
+            {ingredients.map((ingriedient, index) => {
+              const { name, weight, kcal } = ingriedient;
               return (
                 <div key={index} className="create-form__section-ingriedients">
                   <input
                     type="text"
                     className="create-form__input-ingriedients"
                     id="ingriedients"
-                    value={ingredient}
+                    value={name}
                     onChange={(e) =>
                       changeRecipeIngriedients(e.target.value, index)
+                    }
+                  />
+                  <input
+                    type="text"
+                    className="create-form__input-ingriedients"
+                    id="ingriedients"
+                    value={weight}
+                    onChange={(e) =>
+                      changeIngriedientWeight(e.target.value, index)
+                    }
+                  />
+                  <input
+                    type="text"
+                    className="create-form__input-ingriedients"
+                    id="ingriedients"
+                    value={kcal}
+                    onChange={(e) =>
+                      changeIngriedientKcal(e.target.value, index)
                     }
                   />
                   <input

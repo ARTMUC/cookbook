@@ -1,7 +1,7 @@
 import "./BigRecipeCard.css";
 
 const BigRecipeCard = ({
-  image,
+  coverPhoto,
   title,
   description,
   isShared,
@@ -10,17 +10,18 @@ const BigRecipeCard = ({
   handleToggleEditSingleRecipe,
   ingriedients,
 }) => {
+  console.log(ingriedients);
   return (
     <>
       <div
         className="big-recipe_background"
         style={{
-          backgroundImage: `url(${image})`,
+          backgroundImage: `url(${coverPhoto})`,
         }}
       ></div>
       <div className="big-recipe">
         <div className="big-recipe__baner">
-          <img className="big-recipe__baner-image" src={image} />
+          <img className="big-recipe__baner-image" src={coverPhoto} />
         </div>
         <div className="big-recipe__info">
           <h2 className="big-recipe__info-title">{title}</h2>
@@ -41,7 +42,8 @@ const BigRecipeCard = ({
         <div className="big-recipe__ingriedients">
           <ul className="big-recipe__ingriedients-list">
             {ingriedients.map((ingriedient) => {
-              return <li>{ingriedient}</li>;
+              const { name, weight, kcal } = ingriedient;
+              return <li>{name},{weight} g,{kcal} kcal</li>;
             })}
           </ul>
         </div>
