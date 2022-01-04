@@ -2,77 +2,56 @@ import "./RegisterScreen.css";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-function RegisterScreen() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [repeatPassword, setRepeatPassword] = useState("");
+import { useSelector, useDispatch } from "react-redux";
+import { register } from "../redux/actions/authActions";
+
+const RegisterScreen = () => {
+  const [registerForm, setRegisterForm] = useState({
+    email: "",
+    password: "",
+    repeatPassword: "",
+  });
   const [isMessageShown, setIsMessageShown] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [serverMessage, setServerMessage] = useState("");
 
-  const handleEmailChange = (e) => {
-    e.preventDefault();
-    setEmail(e.target.value);
-    console.log(email);
+  const dispatch = useDispatch();
+  const authMessage = useSelector((state) => state.auth.message);
+  const messageType = useSelector((state) => state.auth.messageType);
+
+  const { email, password, repeatPassword } = registerForm;
+
+  const handleFormChange = (e) => {
+    const value = e.target.value;
+    setRegisterForm((prevState) => {
+      return { ...prevState, [e.target.name]: value };
+    });
   };
 
-  const handlePasswordChange = (e) => {
+  const handleRegister = (e) => {
     e.preventDefault();
-    setPassword(e.target.value);
-    console.log(email);
-  };
-
-  const handleRepeatPasswordChange = (e) => {
-    e.preventDefault();
-    setRepeatPassword(e.target.value);
-    console.log(email);
-  };
-
-  const handleRegister = async (e) => {
     setIsMessageShown(false);
     setIsLoading(true);
+    dispatch(register(email, password, repeatPassword));
 
-    try {
-      if (password === repeatPassword) {
-        e.preventDefault();
-        let r = await fetch("http://localhost:5000/api/v1/auth/register", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email: email, password: password }),
-        });
-        setServerMessage(await r.json());
-        setIsLoading(false);
-      } else {
-        setServerMessage({
-          message: 'Both passwords must be identical',
-          statusCode: 400,
-        });
-        setIsLoading(false);
-      }
-    } catch (error) {
-      console.log(error);
-      setServerMessage({ message: "something went wrong", statusCode: 400 });
-      setIsLoading(false);
-    }
-
-    setEmail("");
-    setPassword("");
-    setRepeatPassword("");
-
-    setIsMessageShown(true);
+    setRegisterForm({
+      email: "",
+      password: "",
+      repeatPassword: "",
+    });
   };
+
+  useEffect(() => {
+    setIsLoading(false);
+    setIsMessageShown(true);
+  }, [authMessage]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
       setIsMessageShown(false);
     }, 3000);
-   
+
     return () => clearTimeout(timeout);
   }, [isMessageShown]);
-
-  const { message, statusCode } = serverMessage;
 
   return (
     <form className="container-register">
@@ -83,61 +62,60 @@ function RegisterScreen() {
         </p>
         <div
           className={
-            !statusCode
+            messageType === "success"
               ? "container-register__message-success"
               : "container-register__message-fail"
           }
         >
-          {isMessageShown && message}
-          {isLoading && <div className="container-register__loader-circle"></div>}
+          {isMessageShown && authMessage}
+          {isLoading && (
+            <div className="container-register__loader-circle"></div>
+          )}
         </div>
-      
+
         <label for="email">
           <b>Email</b>
         </label>
         <input
-         className="form-register__input-email"
+          className="form-register__input-email"
           type="text"
           placeholder="Enter Email"
           name="email"
-          id="email"
           required
           value={email}
-          onChange={handleEmailChange}
+          onChange={handleFormChange}
         />
 
-        <label for="psw">
+        <label for="password">
           <b>Password</b>
         </label>
         <input
-        className="form-register__input-password"
+          className="form-register__input-password"
           type="password"
           placeholder="Enter Password"
-          name="psw"
-          id="psw"
+          name="password"
           required
           value={password}
-          onChange={handlePasswordChange}
+          onChange={handleFormChange}
         />
 
-        <label for="psw-repeat">
+        <label for="repeatPassword">
           <b>Repeat Password</b>
         </label>
         <input
-        className="form-register__input-password"
+          className="form-register__input-password"
           type="password"
           placeholder="Repeat Password"
-          name="psw-repeat"
-          id="psw-repeat"
+          name="repeatPassword"
           required
           value={repeatPassword}
-          onChange={handleRepeatPasswordChange}
+          onChange={handleFormChange}
         />
 
         <p className="form-register__footer">
           Already have an account?
           <Link className="form-register__footer-link" to="/login-screen">
-            {"  "} LOGIN HERE {"  "}
+            LOGIN HERE
           </Link>
         </p>
 
@@ -147,6 +125,6 @@ function RegisterScreen() {
       </div>
     </form>
   );
-}
+};
 
 export default RegisterScreen;

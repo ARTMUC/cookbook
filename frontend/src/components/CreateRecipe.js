@@ -1,27 +1,27 @@
-import "./EditRecipe.css";
+import "./CreateRecipe.css";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { v4 as uuid } from "uuid";
-import {
-  editSingleRecipe,
-  deleteSingleRecipe,
-} from "../redux/actions/singleRecipeActions";
+import { createRecipe } from "../redux/actions/userRecipesActions";
 
-const EditRecipe = ({ handleToggleEditSingleRecipe }) => {
+const CreateRecipe = ({ handleToggleAddingNewRecipe }) => {
   const dispatch = useDispatch();
-  const recipe = useSelector((state) => state.recipe);
 
-  const { recipe_id } = useParams();
-  const [editedRecipe, setEditedRecipe] = useState({ ...recipe });
+  const [recipe, setRecipe] = useState({
+    id: uuid(),
+    title: "",
+    description: "",
+    isShared: false,
+    ingriedients: [],
+  });
   const [uploadedImage, setUploadedImage] = useState("");
 
-  const { title, description, isShared, ingriedients } = editedRecipe;
+  const { title, description, isShared, ingriedients } = recipe;
 
   const handleFormChange = (e, index) => {
     switch (e.target.id) {
       case "ingriedient":
-        setEditedRecipe((prevState) => {
+        setRecipe((prevState) => {
           const ingriedientsArr = [...prevState.ingriedients];
           ingriedientsArr[index] = {
             ...ingriedientsArr[index],
@@ -31,12 +31,12 @@ const EditRecipe = ({ handleToggleEditSingleRecipe }) => {
         });
         break;
       case "isShared":
-        setEditedRecipe((prevState) => {
+        setRecipe((prevState) => {
           return { ...prevState, [e.target.name]: !prevState.isShared };
         });
         break;
       default:
-        setEditedRecipe((prevState) => {
+        setRecipe((prevState) => {
           return { ...prevState, [e.target.name]: e.target.value };
         });
         break;
@@ -45,7 +45,7 @@ const EditRecipe = ({ handleToggleEditSingleRecipe }) => {
 
   const addIngriedient = (e) => {
     e.preventDefault();
-    setEditedRecipe((prevState) => {
+    setRecipe((prevState) => {
       return {
         ...prevState,
         ingriedients: [
@@ -58,7 +58,7 @@ const EditRecipe = ({ handleToggleEditSingleRecipe }) => {
 
   const removeIngriedient = (e, id) => {
     e.preventDefault();
-    setEditedRecipe((prevState) => {
+    setRecipe((prevState) => {
       const ingriedients = prevState.ingriedients.filter((el) => el.id !== id);
       return {
         ...prevState,
@@ -68,23 +68,16 @@ const EditRecipe = ({ handleToggleEditSingleRecipe }) => {
   };
 
   const discardChanges = () => {
-    handleToggleEditSingleRecipe();
+    handleToggleAddingNewRecipe();
+  };
+
+  const handleCreateRecipe = async () => {
+    await dispatch(createRecipe(recipe, uploadedImage));
+    handleToggleAddingNewRecipe();
   };
 
   const handleImageInput = async (e) => {
     setUploadedImage(e.target.files);
-  };
-
-  const handleEditRecipe = async () => {
-    await dispatch(
-      editSingleRecipe(recipe_id, recipe, editedRecipe, uploadedImage)
-    );
-    handleToggleEditSingleRecipe();
-  };
-
-  const handleRemoveSingleRecipe = async () => {
-    await dispatch(deleteSingleRecipe(recipe_id));
-    window.location.href = `/user-screen`;
   };
 
   return (
@@ -200,18 +193,15 @@ const EditRecipe = ({ handleToggleEditSingleRecipe }) => {
         >
           discard changes
         </button>
-        <button onClick={handleEditRecipe} className="edit-recipe__button-save">
-          save changes
-        </button>
         <button
-          onClick={handleRemoveSingleRecipe}
-          className="edit-recipe__button-remove"
+          onClick={handleCreateRecipe}
+          className="edit-recipe__button-save"
         >
-          delete recipe
+          save changes
         </button>
       </div>
     </>
   );
 };
 
-export default EditRecipe;
+export default CreateRecipe;

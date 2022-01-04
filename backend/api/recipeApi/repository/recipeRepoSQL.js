@@ -7,7 +7,7 @@ class RecipeRepository {
   async findRecipe(recipeId) {
     try {
       const [ingriedients] = await mySQLPool.execute(
-        "SELECT  `ingriedients`.`name`,`ingriedients`.`kcal`, `recipe`.`id`, `recipe_ingriedients`.`weight`  FROM `recipe`  LEFT JOIN `recipe_ingriedients` ON `recipe`.`id`=`recipe_ingriedients`.`recipe_id` LEFT JOIN `ingriedients` ON `ingriedients`.`id`=`recipe_ingriedients`.`ingriedient_id`  WHERE `recipe`.`id`= ? ",
+        "SELECT  `ingriedients`.`name`,`ingriedients`.`kcal`, `recipe_ingriedients`.`id` , `recipe_ingriedients`.`weight`  FROM `recipe`  LEFT JOIN `recipe_ingriedients` ON `recipe`.`id`=`recipe_ingriedients`.`recipe_id` LEFT JOIN `ingriedients` ON `ingriedients`.`id`=`recipe_ingriedients`.`ingriedient_id`  WHERE `recipe`.`id`= ? ",
         [recipeId]
       );
 
@@ -23,10 +23,8 @@ class RecipeRepository {
       recipe.ingriedients = [];
 
       for await (const ingriedient of ingriedients) {
-        if (ingriedient.id === recipe.id) {
-          const { name, kcal, weight } = ingriedient;
-          recipe.ingriedients.push({ name, kcal, weight });
-        }
+        const { id, name, kcal, weight } = ingriedient;
+        recipe.ingriedients.push({ id, name, kcal, weight });
       }
 
       return recipe;
@@ -123,10 +121,14 @@ class RecipeRepository {
 
   async saveRecipe(recipeData, imageLink, userId) {
     try {
-      const { title, description, isShared, ingriedients } = recipeData;
+      const { id, title, description, isShared, ingriedients } = recipeData;
+
+      if (!title.trim() || !description.trim()) {
+        throw new CustomError("fields required", 400);
+      }
 
       //save recipe
-      const recipeId = uuidv4();
+      const recipeId = id ? id : uuidv4();
       await mySQLPool.execute(
         "INSERT INTO `recipe` (`id`,`title`,`createdAt`,`description`,`user_id`,`isShared`) VALUES (?,?,?,?,?,?)",
         [recipeId, title, currentSQLdate(), description, userId, isShared]
@@ -172,8 +174,6 @@ class RecipeRepository {
     }
   }
   async findRecipeAndUpdate(recipeId, userId, patchData, imageLink) {
-    //sprawdzic tez z user.id -> sprawdzic  id usera z bazy ??? -> jezeli cos nie tak zucic bledem zeby nikt nieporzadany nie mogl usuwac edytowac czyichs innych dokumentow
-
     const [{ user_id }] = (
       await mySQLPool.execute(
         "SELECT   `recipe`.`user_id` FROM `recipe` WHERE `recipe`.`id`= ? ",
@@ -196,13 +196,16 @@ class RecipeRepository {
       );
 
       //update image link
-
-      await mySQLPool.execute(
-        "UPDATE `images` SET `coverPhoto`=?,`miniaturePhoto`=? WHERE `recipe_id`=? ",
-        [imageLink, imageLink, recipeId]
-      );
+      if (imageLink) {
+        await mySQLPool.execute(
+          "UPDATE `images` SET `coverPhoto`=?,`miniaturePhoto`=? WHERE `recipe_id`=? ",
+          [imageLink, imageLink, recipeId]
+        );
+      }
 
       //delete all existing ingriedients from recipe
+
+      if (ingriedients.length === 0) return;
 
       await mySQLPool.execute(
         "DELETE FROM `recipe_ingriedients` WHERE `recipe_id`=?",
@@ -212,7 +215,8 @@ class RecipeRepository {
       //save ingriedients from array
 
       ingriedients.forEach(async (element) => {
-        const { name, kcal, weight } = element;
+        const { id, name, kcal, weight } = element;
+        const recipeIngriedientId = id ? id : uuidv4();
         let ingriedientId;
         //check if ingriedient already exits
         const [ingriedient] = await mySQLPool.execute(
@@ -234,7 +238,7 @@ class RecipeRepository {
 
         await mySQLPool.execute(
           "INSERT INTO `recipe_ingriedients` (`id`,`recipe_id`,`ingriedient_id`, `weight`) VALUES (?,?,?,?)",
-          [uuidv4(), recipeId, ingriedientId, weight]
+          [recipeIngriedientId, recipeId, ingriedientId, weight]
         );
       });
 
@@ -263,7 +267,6 @@ class RecipeRepository {
         )
       )[0];
 
-
       await mySQLPool.execute("DELETE FROM `images` WHERE `recipe_id`=? ", [
         recipeId,
       ]);
@@ -274,9 +277,7 @@ class RecipeRepository {
 
       await mySQLPool.execute("DELETE FROM `recipe` WHERE `id`=?", [recipeId]);
 
-
-return coverPhoto
-
+      return coverPhoto;
     } catch (err) {
       if (err instanceof CustomError)
         throw new CustomError(err.message, err.statusCode);

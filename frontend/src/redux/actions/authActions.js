@@ -1,86 +1,78 @@
 import * as actionTypes from "../constants/authConstants";
+import AuthService from "../../services/authService";
 
-export const login = (email, password) => async (dispatch, getState) => {
+const authService = new AuthService();
+
+export const login = (email, password) => async (dispatch) => {
   try {
-    const response = await fetch("http://localhost:5000/api/v1/auth/login", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email: email, password: password }),
-    });
+    const { user, message } = await authService.login(email, password);
 
-    const data = await response.json();
-
-    const authData = {
-      user: data.user,
-      message: data.message,
-    };
-
-    localStorage.setItem("redux-storage", JSON.stringify(authData));
-
-    dispatch({
-      type: actionTypes.LOGIN,
-      payload: { ...authData },
-    });
+    user
+      ? dispatch({
+          type: actionTypes.LOGIN,
+          payload: {
+            user,
+            message,
+            isLoggedIn: true,
+          },
+        })
+      : dispatch({
+          type: actionTypes.LOGIN_FAILED,
+          payload: {
+            user,
+            message,
+            isLoggedIn: false,
+          },
+        });
   } catch (error) {
     console.log(error);
     dispatch({
-      type: actionTypes.LOGIN,
+      type: actionTypes.LOGIN_FAILED,
       payload: {
-        message: 'something went wrong',
+        message: "something went wrong",
+        isLoggedIn: false,
       },
     });
   }
 };
 
-export const logout = () => async (dispatch, getState) => {
-  localStorage.removeItem("redux-storage");
-  const response = await fetch("http://localhost:5000/api/v1/auth/logout", {
-    method: "GET",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+export const logout = () => async (dispatch) => {
+  await authService.logout();
   dispatch({
     type: actionTypes.LOGOUT,
-    payload: {},
+    payload: { isLoggedIn: false },
   });
 };
 
-export const confirmLoggedIn = () => async (dispatch, getState) => {
-  try {
-    const response = await fetch(
-      "http://localhost:5000/api/v1/auth/ensureLoggedIn",
-      {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    const data = await response.json();
-    const authData = {
-      user: data.user,
-      message: data.message,
-    };
-
-    localStorage.setItem("redux-storage", JSON.stringify(authData));
-
-    dispatch({
-      type: actionTypes.CONFIRM_LOGGED_IN,
-      payload: { ...authData },
-    });
-  } catch (error) {
-    console.log(error);
-    dispatch({
-      type: actionTypes.LOGIN,
-      payload: {
-        message: 'something went wrong',
-      },
-    });
-  }
+export const notAuthenticated = () => async (dispatch) => {
+  await authService.notAuthenticated();
+  dispatch({
+    type: actionTypes.NOT_AUTHENTICATED,
+    payload: { isLoggedIn: false },
+  });
 };
+
+
+
+export const register =
+  (email, password, repeatPassword) => async (dispatch) => {
+    try {
+      if (password !== repeatPassword)
+        throw new Error("Both passwords must be identical");
+      const message = await authService.register(email, password);
+      dispatch({
+        type: actionTypes.REGISTER,
+        payload: { message, messageType: "success", isLoggedIn: false },
+      });
+    } catch (error) {
+      console.log(error);
+      dispatch({
+        type: actionTypes.REGISTER_FAILED,
+        payload: {
+          message: error.message,
+          messageType: "fail",
+          isLoggedIn: false,
+        },
+      });
+    }
+  };

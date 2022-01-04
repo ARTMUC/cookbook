@@ -1,55 +1,20 @@
-import "./App.css";
-
-//components
-
+import { Route, Switch, BrowserRouter as Router } from "react-router-dom";
+import { useState } from "react";
 import UserScreen from "./screens/UserScreen";
 import HomeScreen from "./screens/HomeScreen";
 import Navbar from "./components/Navbar";
 import SideDrawer from "./components/SideDrawer";
-import BackDrop from "./components/BackDrop";
+
 import SingleRecipe from "./screens/SingleRecipe";
 import RegisterScreen from "./screens/RegisterScreen";
 import LoginScreen from "./screens/LoginScreen";
-import CreateRecipe from "./screens/CreateRecipe";
 
-import { useState } from "react";
-
-// react - redux
-import { useSelector, useDispatch } from "react-redux";
-import { login, logout } from "./redux/actions/authActions";
-//
-
-import {
-  Route,
-  Redirect,
-  Switch,
-  BrowserRouter as Router,
-} from "react-router-dom";
-
-function NotFound() {
-  return <>You have landed on a page that doesn't exist</>;
-}
-
-function PrivateRoute({ component: Component, ...rest }) {
-  // react - redux
-  const dispatch = useDispatch(); // I'm not using dispatch here but for now I won't be deleting this just for learning process
-  const auth = useSelector((state) => state.auth);
-  //
-  const isAuth = auth.user;
-
-  return (
-    <Route
-      {...rest}
-      render={(props) =>
-        isAuth ? <Component {...props} /> : <Redirect to="/" />
-      }
-    />
-  );
-}
+import NotFound from "./components/NotFound";
+import PrivateRoute from "./components/PrivateRoute";
+import "./App.css";
 
 function App() {
   const [sideToggle, setSideToggle] = useState(false);
-
   const handleShowDrawer = () => {
     setSideToggle((prev) => !prev);
   };
@@ -59,13 +24,11 @@ function App() {
       <div>
         <Navbar showDrawer={handleShowDrawer} />
         <SideDrawer show={sideToggle} showDrawer={handleShowDrawer} />
-        <BackDrop show={sideToggle} showDrawer={handleShowDrawer} />
       </div>
 
       <main className="container--text">
         <Switch>
           <Route exact path="/" component={HomeScreen} />
-          <Route exact path="/create-new" component={CreateRecipe} />
           <Route exact path="/login-screen" component={LoginScreen} />
           <Route exact path="/register-screen" component={RegisterScreen} />
           <PrivateRoute path="/user-screen" component={UserScreen} />

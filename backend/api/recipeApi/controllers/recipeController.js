@@ -4,8 +4,8 @@ const Service = new RecipeService();
 
 const getOneRecipe = async (req, res, next) => {
   try {
-    const {recipe_id} = req.params;
-    const {id:userId} = req.user;
+    const { recipe_id } = req.params;
+    const { id: userId } = req.user;
 
     const recipe = await Service.getOneRecipe(recipe_id, userId);
 
@@ -17,7 +17,7 @@ const getOneRecipe = async (req, res, next) => {
 
 const getAllUserRecipes = async (req, res, next) => {
   try {
-    const { id:userId } = req.user;
+    const { id: userId } = req.user;
     const { sort, order } = req.query;
     const requestedPage = req.params.page;
     const resultsPerPage = 8;
@@ -60,11 +60,15 @@ const createRecipe = async (req, res, next) => {
   try {
     // image is saved on the server using Multer as middleware
     const imageName = req.file ? req.file.filename : null;
-    const { id:userId } = req.user;
+    const { id: userId } = req.user;
     const patchData = req.body.patchData;
-    await Service.createRecipe(imageName, userId, patchData);
+    const newImageLink = await Service.createRecipe(
+      imageName,
+      userId,
+      patchData
+    );
 
-    res.status(201).json("recipe created");
+    res.status(201).json(newImageLink);
   } catch (error) {
     next(error);
   }
@@ -73,14 +77,19 @@ const createRecipe = async (req, res, next) => {
 const editRecipe = async (req, res, next) => {
   try {
     const imageName = req.file ? req.file.filename : null;
-    const { id:userId } = req.user;
+    const { id: userId } = req.user;
 
     const recipeId = req.params.recipe_id;
     const patchData = req.body.patchData;
 
-    const recipe = await Service.editRecipe(imageName, userId, recipeId, patchData);
+    const newImageLink = await Service.editRecipe(
+      imageName,
+      userId,
+      recipeId,
+      patchData
+    );
 
-    res.status(200).json(recipe);
+    res.status(200).json(newImageLink);
   } catch (error) {
     next(error);
   }
@@ -88,7 +97,7 @@ const editRecipe = async (req, res, next) => {
 
 const removeRecipe = async (req, res, next) => {
   try {
-    const { id:userId } = req.user;
+    const { id: userId } = req.user;
     const recipeId = req.params.recipe_id;
 
     await Service.removeRecipe(recipeId, userId);

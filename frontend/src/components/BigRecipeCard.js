@@ -5,12 +5,12 @@ const BigRecipeCard = ({
   title,
   description,
   isShared,
-  createdBy,
+  email,
   isEditable,
   handleToggleEditSingleRecipe,
   ingriedients,
 }) => {
-  console.log(ingriedients);
+ 
   return (
     <>
       <div
@@ -25,7 +25,7 @@ const BigRecipeCard = ({
         </div>
         <div className="big-recipe__info">
           <h2 className="big-recipe__info-title">{title}</h2>
-          <p className="big-recipe__info-author">created by: {createdBy}</p>
+          <p className="big-recipe__info-author">created by: {email}</p>
           <p className="big-recipe__info-share">
             {isShared ? <p>SHARED ⚑</p> : <p>PRIVATE ⚐</p>}{" "}
           </p>
@@ -43,7 +43,11 @@ const BigRecipeCard = ({
           <ul className="big-recipe__ingriedients-list">
             {ingriedients.map((ingriedient) => {
               const { name, weight, kcal } = ingriedient;
-              return <li>{name},{weight} g,{kcal} kcal</li>;
+              return (
+                <li>
+                  {name},{weight} g,{kcal} kcal
+                </li>
+              );
             })}
           </ul>
         </div>

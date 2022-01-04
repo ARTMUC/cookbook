@@ -16,9 +16,10 @@ class RecipeService {
         throw new CustomError("no access", 403);
       return recipe;
     } catch (err) {
-      if (err instanceof CustomError)
-        throw new CustomError(err.message, err.statusCode);
-      throw new Error(err.message);
+      // if (err instanceof CustomError)
+      //   throw new CustomError(err.message, err.statusCode);
+      // throw new Error(err.message);
+      throw err;
     }
   }
 
@@ -52,9 +53,10 @@ class RecipeService {
       );
       return { totalPages, page, resultsPerPage, count, recipes };
     } catch (err) {
-      if (err instanceof CustomError)
-        throw new CustomError(err.message, err.statusCode);
-      throw new Error(err.message);
+      // if (err instanceof CustomError)
+      //   throw new CustomError(err.message, err.statusCode);
+      // throw new Error(err.message);
+      throw err;
     }
   }
 
@@ -88,30 +90,26 @@ class RecipeService {
       );
       return { totalPages, page, resultsPerPage, count, recipes };
     } catch (err) {
-      if (err instanceof CustomError)
-        throw new CustomError(err.message, err.statusCode);
-      throw new Error(err.message);
+      // if (err instanceof CustomError)
+      //   throw new CustomError(err.message, err.statusCode);
+      // throw new Error(err.message);
+      throw err;
     }
   }
 
-  async createRecipe(imageName, userId, recipehData) {
+  async createRecipe(imageName, userId, data) {
     try {
-      const newRecipeData = JSON.parse(recipehData);
-      const imageLink = imageName
-        ? `http://localhost:5000/api/v1/recipe/image=${imageName}`
-        : image;
+      const recipeData = JSON.parse(data);
+      if (!imageName) throw new CustomError("image is required", 400);
+      const imageLink = `http://localhost:5000/api/v1/recipe/image=${imageName}`;
+      await this.repository.saveRecipe(recipeData, imageLink, userId);
 
-      if (!title.trim() || !description.trim()) {
-        throw new CustomError("fields required", 400);
-      }
-
-      await this.repository.saveRecipe(newRecipeData, imageLink, userId);
-
-      return;
+      return imageLink;
     } catch (err) {
-      if (err instanceof CustomError)
-        throw new CustomError(err.message, err.statusCode);
-      throw new Error(err.message);
+      // if (err instanceof CustomError)
+      //   throw new CustomError(err.message, err.statusCode);
+      // throw new Error(err.message);
+      throw err;
     }
   }
 
@@ -119,37 +117,34 @@ class RecipeService {
     try {
       const recipePatchData = JSON.parse(patchData);
 
-      const image = recipePatchData.image;
-      const imageLink = imageName
-        ? `http://localhost:5000/api/v1/recipe/image=${imageName}`
-        : image;
+      const image = recipePatchData.coverPhoto;
+      const imageLink =
+        imageName && `http://localhost:5000/api/v1/recipe/image=${imageName}`;
 
-      const recipe = await this.repository.findRecipeAndUpdate(
+      await this.repository.findRecipeAndUpdate(
         recipeId,
         userId,
         recipePatchData,
         imageLink
       );
 
-      if (imageName) {
+      if (imageLink) {
         const oldImageRequestSplit = image.split("=");
         const oldImageFileName = oldImageRequestSplit[1];
         const oldImagePath = resolve(FILE_DIRECTORY, `./${oldImageFileName}`);
         await unlink(oldImagePath);
       }
-      return recipe;
+      return imageLink ? imageLink : image;
     } catch (err) {
-      if (err instanceof CustomError)
-        throw new CustomError(err.message, err.statusCode);
-      throw new Error(err.message);
+      // if (err instanceof CustomError)
+      //   throw new CustomError(err.message, err.statusCode);
+      // throw new Error(err.message);
+      throw err;
     }
   }
   async removeRecipe(recipeId, userId) {
     try {
-      const image = await this.repository.findRecipeAndDelete(
-        recipeId,
-        userId
-      );
+      const image = await this.repository.findRecipeAndDelete(recipeId, userId);
 
       const oldImageRequestSplit = image.split("=");
       const oldImageFileName = oldImageRequestSplit[1];
@@ -158,9 +153,10 @@ class RecipeService {
 
       return;
     } catch (err) {
-      if (err instanceof CustomError)
-        throw new CustomError(err.message, err.statusCode);
-      throw new Error(err.message);
+      // if (err instanceof CustomError)
+      //   throw new CustomError(err.message, err.statusCode);
+      // throw new Error(err.message);
+      throw err;
     }
   }
   async GetImage(image_id) {
@@ -168,9 +164,10 @@ class RecipeService {
       const imagePath = resolve(FILE_DIRECTORY, `${image_id}`);
       return await readFile(imagePath);
     } catch (err) {
-      if (err instanceof CustomError)
-        throw new CustomError(err.message, err.statusCode);
-      throw new Error(err.message);
+      // if (err instanceof CustomError)
+      //   throw new CustomError(err.message, err.statusCode);
+      // throw new Error(err.message);
+      throw err;
     }
   }
 }

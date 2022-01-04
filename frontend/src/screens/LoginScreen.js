@@ -3,31 +3,28 @@ import "./LoginScreen.css";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-// react - redux
 import { useSelector, useDispatch } from "react-redux";
-import { login, logout } from "../redux/actions/authActions";
-//
+import { login } from "../redux/actions/authActions";
 
 function LoginScreen() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [loginForm, setLoginForm] = useState({
+    email: "",
+    password: "",
+  });
   const [isMessageShown, setIsMessageShown] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // react - redux
   const dispatch = useDispatch();
   const authMessage = useSelector((state) => state.auth.message);
   const authUser = useSelector((state) => state.auth.user);
-  //
 
-  const handleEmailChange = (e) => {
-    e.preventDefault();
-    setEmail(e.target.value);
-  };
+  const { email, password } = loginForm;
 
-  const handlePasswordChange = (e) => {
-    e.preventDefault();
-    setPassword(e.target.value);
+  const handleFormChange = (e) => {
+    const value = e.target.value;
+    setLoginForm((prevState) => {
+      return { ...prevState, [e.target.name]: value };
+    });
   };
 
   const handleLogin = async (e) => {
@@ -36,8 +33,10 @@ function LoginScreen() {
 
     await dispatch(login(email, password));
 
-    setEmail("");
-    setPassword("");
+    setLoginForm({
+      email: "",
+      password: "",
+    });
     setIsLoading(false);
     setIsMessageShown(true);
   };
@@ -86,7 +85,7 @@ function LoginScreen() {
           id="email"
           required
           value={email}
-          onChange={handleEmailChange}
+          onChange={handleFormChange}
         />
 
         <label for="psw">
@@ -96,11 +95,11 @@ function LoginScreen() {
           className="form-login__input-password"
           type="password"
           placeholder="Enter Password"
-          name="psw"
+          name="password"
           id="psw"
           required
           value={password}
-          onChange={handlePasswordChange}
+          onChange={handleFormChange}
         />
 
         <button className="form-login__button" onClick={handleLogin}>

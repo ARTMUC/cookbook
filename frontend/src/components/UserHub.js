@@ -1,15 +1,11 @@
 import "./UserHub.css";
 
-import { useEffect, useState } from "react";
-
-
 const UserHub = ({
   changePage,
   changeSortParams,
   sortParams,
   currentPage,
   totalPages,
-
 }) => {
   return (
     <ul className="container-hub">
@@ -40,7 +36,7 @@ const UserHub = ({
             className="container-hub__element-option"
             value="sort=createdAt&order=DESC"
           >
-            newest
+            latest
           </option>
           <option
             className="container-hub__element-option"
@@ -52,13 +48,13 @@ const UserHub = ({
             className="container-hub__element-option"
             value="sort=title&order=ASC"
           >
-            a b c
+            ascending
           </option>
           <option
             className="container-hub__element-option"
             value="sort=title&order=DESC"
           >
-            c b a
+            descending
           </option>
         </select>
       </li>
