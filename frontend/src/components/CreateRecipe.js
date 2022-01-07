@@ -18,28 +18,24 @@ const CreateRecipe = ({ handleToggleAddingNewRecipe }) => {
 
   const { title, description, isShared, ingriedients } = recipe;
 
-  const handleFormChange = (e, index) => {
-    switch (e.target.id) {
+  const handleFormChange = (event, index) => {
+    const { id, name, value } = event.target;
+
+    switch (id) {
       case "ingriedient":
-        setRecipe((prevState) => {
-          const ingriedientsArr = [...prevState.ingriedients];
-          ingriedientsArr[index] = {
-            ...ingriedientsArr[index],
-            [e.target.name]: e.target.value,
-          };
-          return { ...prevState, ingriedients: [...ingriedientsArr] };
+        return setRecipe((prev) => {
+          const ingriedients = [...prev.ingriedients].map((el, i) => {
+            return i === index ? { ...el, [name]: value } : el;
+          });
+
+          return { ...prev, ingriedients };
         });
-        break;
+
       case "isShared":
-        setRecipe((prevState) => {
-          return { ...prevState, [e.target.name]: !prevState.isShared };
-        });
-        break;
+        return setRecipe((prev) => ({ ...prev, [name]: !prevState.isShared }));
+
       default:
-        setRecipe((prevState) => {
-          return { ...prevState, [e.target.name]: e.target.value };
-        });
-        break;
+        return setRecipe((prev) => ({ ...prev, [name]: value }));
     }
   };
 
