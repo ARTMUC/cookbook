@@ -11,37 +11,33 @@ class UserService {
     this.repository = new UserRepository();
   }
 
-  async Register(userInputs) {
+  async register(userInputs) {
     const { email, password } = userInputs;
     try {
-      await this.repository.CheckIfExists(email);
+      await this.repository.checkIfExists(email);
       const hashedPassword = await hashPassword(password);
       const emailConfirmationCode = await randomValue();
-      await this.repository.SaveUser({
+      await this.repository.saveUser({
         email,
         hashedPassword,
         emailConfirmationCode,
       });
       await sendConfirmationEmail(email, emailConfirmationCode);
     } catch (err) {
-      if (err instanceof CustomError)
-        throw new CustomError(err.message, err.statusCode);
-      throw new Error(err.message);
+      throw err;
     }
   }
 
-  async ConfirmUserEmail(confirmationId) {
+  async confirmUserEmail(confirmationId) {
     try {
-      const doc = await this.repository.ConfirmUser(confirmationId);
+      const doc = await this.repository.confirmUser(confirmationId);
       if (!doc)
         throw new CustomError(
           "Your confirmation link doesn't work. Please contact Administartor.",
           401
         );
     } catch (err) {
-      if (err instanceof CustomError)
-        throw new CustomError(err.message, err.statusCode);
-      throw new Error(err.message);
+      throw err;
     }
   }
 }

@@ -32,7 +32,7 @@ const CreateRecipe = ({ handleToggleAddingNewRecipe }) => {
         });
 
       case "isShared":
-        return setRecipe((prev) => ({ ...prev, [name]: !prevState.isShared }));
+        return setRecipe((prev) => ({ ...prev, [name]: !prev.isShared }));
 
       default:
         return setRecipe((prev) => ({ ...prev, [name]: value }));

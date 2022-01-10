@@ -16,9 +16,6 @@ class RecipeService {
         throw new CustomError("no access", 403);
       return recipe;
     } catch (err) {
-      // if (err instanceof CustomError)
-      //   throw new CustomError(err.message, err.statusCode);
-      // throw new Error(err.message);
       throw err;
     }
   }
@@ -53,9 +50,6 @@ class RecipeService {
       );
       return { totalPages, page, resultsPerPage, count, recipes };
     } catch (err) {
-      // if (err instanceof CustomError)
-      //   throw new CustomError(err.message, err.statusCode);
-      // throw new Error(err.message);
       throw err;
     }
   }
@@ -90,9 +84,6 @@ class RecipeService {
       );
       return { totalPages, page, resultsPerPage, count, recipes };
     } catch (err) {
-      // if (err instanceof CustomError)
-      //   throw new CustomError(err.message, err.statusCode);
-      // throw new Error(err.message);
       throw err;
     }
   }
@@ -106,9 +97,6 @@ class RecipeService {
 
       return imageLink;
     } catch (err) {
-      // if (err instanceof CustomError)
-      //   throw new CustomError(err.message, err.statusCode);
-      // throw new Error(err.message);
       throw err;
     }
   }
@@ -136,9 +124,6 @@ class RecipeService {
       }
       return imageLink ? imageLink : image;
     } catch (err) {
-      // if (err instanceof CustomError)
-      //   throw new CustomError(err.message, err.statusCode);
-      // throw new Error(err.message);
       throw err;
     }
   }
@@ -153,20 +138,14 @@ class RecipeService {
 
       return;
     } catch (err) {
-      // if (err instanceof CustomError)
-      //   throw new CustomError(err.message, err.statusCode);
-      // throw new Error(err.message);
       throw err;
     }
   }
-  async GetImage(image_id) {
+  async getImage(image_id) {
     try {
       const imagePath = resolve(FILE_DIRECTORY, `${image_id}`);
       return await readFile(imagePath);
     } catch (err) {
-      // if (err instanceof CustomError)
-      //   throw new CustomError(err.message, err.statusCode);
-      // throw new Error(err.message);
       throw err;
     }
   }

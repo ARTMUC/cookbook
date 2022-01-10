@@ -1,13 +1,13 @@
 const { RecipeService } = require("../services/recipeService");
 const CustomError = require("../../../errors/CustomError");
-const Service = new RecipeService();
+const service = new RecipeService();
 
 const getOneRecipe = async (req, res, next) => {
   try {
     const { recipe_id } = req.params;
     const { id: userId } = req.user;
 
-    const recipe = await Service.getOneRecipe(recipe_id, userId);
+    const recipe = await service.getOneRecipe(recipe_id, userId);
 
     res.json(recipe);
   } catch (error) {
@@ -22,7 +22,7 @@ const getAllUserRecipes = async (req, res, next) => {
     const requestedPage = req.params.page;
     const resultsPerPage = 8;
 
-    const doc = await Service.getAllUserRecipes(
+    const doc = await service.getAllUserRecipes(
       userId,
       resultsPerPage,
       requestedPage,
@@ -42,7 +42,7 @@ const getAllSharedRecipes = async (req, res, next) => {
     const requestedPage = req.params.page;
     const resultsPerPage = 8;
 
-    const doc = await Service.getAllSharedRecipes(
+    const doc = await service.getAllSharedRecipes(
       isShared,
       resultsPerPage,
       requestedPage,
@@ -62,7 +62,7 @@ const createRecipe = async (req, res, next) => {
     const imageName = req.file ? req.file.filename : null;
     const { id: userId } = req.user;
     const patchData = req.body.patchData;
-    const newImageLink = await Service.createRecipe(
+    const newImageLink = await service.createRecipe(
       imageName,
       userId,
       patchData
@@ -82,7 +82,7 @@ const editRecipe = async (req, res, next) => {
     const recipeId = req.params.recipe_id;
     const patchData = req.body.patchData;
 
-    const newImageLink = await Service.editRecipe(
+    const newImageLink = await service.editRecipe(
       imageName,
       userId,
       recipeId,
@@ -112,7 +112,7 @@ const getImage = async (req, res, next) => {
   try {
     const image_id = req.params.image_id;
 
-    const image = await Service.GetImage(image_id);
+    const image = await service.getImage(image_id);
 
     res.writeHead(200, { "Content-Type": "image/gif" });
     res.end(image, "binary");

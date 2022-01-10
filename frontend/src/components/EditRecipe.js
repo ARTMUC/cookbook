@@ -34,7 +34,7 @@ const EditRecipe = ({ handleToggleEditSingleRecipe }) => {
       case "isShared":
         return setEditedRecipe((prev) => ({
           ...prev,
-          [name]: !prevState.isShared,
+          [name]: !prev.isShared,
         }));
 
       default:

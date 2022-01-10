@@ -1,12 +1,12 @@
 const { UserService } = require("../services/userService");
 const CustomError = require("../../../errors/CustomError");
 
-const Service = new UserService();
+const service = new UserService();
 
 const register = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    await Service.Register({ email, password });
+    await service.register({ email, password });
     res.status(201).json({
       message: "Check your inbox. We've sent you email with confirmation link.",
     });
@@ -41,7 +41,7 @@ const confirmEmail = async (req, res, next) => {
   const receivedConfirmationId = `${req.params.no}`;
 
   try {
-    await Service.ConfirmUserEmail(receivedConfirmationId)
+    await service.confirmUserEmail(receivedConfirmationId)
 
     res.status(200).send("email confirmed");
   } catch (error) {

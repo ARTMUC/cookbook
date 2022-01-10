@@ -29,9 +29,7 @@ class RecipeRepository {
 
       return recipe;
     } catch (err) {
-      if (err instanceof CustomError)
-        throw new CustomError(err.message, err.statusCode);
-      throw new Error(err.message);
+      throw err;
     }
   }
   async countDocumentsByUserId(userId) {
@@ -45,9 +43,7 @@ class RecipeRepository {
 
       return count;
     } catch (err) {
-      if (err instanceof CustomError)
-        throw new CustomError(err.message, err.statusCode);
-      throw new Error(err.message);
+      throw err;
     }
   }
   async findUserRecipesAndSort(userId, sortBy, order, resultsPerPage, page) {
@@ -67,9 +63,7 @@ class RecipeRepository {
 
       return doc;
     } catch (err) {
-      if (err instanceof CustomError)
-        throw new CustomError(err.message, err.statusCode);
-      throw new Error(err.message);
+      throw err;
     }
   }
 
@@ -84,9 +78,7 @@ class RecipeRepository {
 
       return count;
     } catch (err) {
-      if (err instanceof CustomError)
-        throw new CustomError(err.message, err.statusCode);
-      throw new Error(err.message);
+      throw err;
     }
   }
 
@@ -113,9 +105,7 @@ class RecipeRepository {
 
       return doc;
     } catch (err) {
-      if (err instanceof CustomError)
-        throw new CustomError(err.message, err.statusCode);
-      throw new Error(err.message);
+      throw err;
     }
   }
 
@@ -168,9 +158,7 @@ class RecipeRepository {
 
       return;
     } catch (err) {
-      if (err instanceof CustomError)
-        throw new CustomError(err.message, err.statusCode);
-      throw new Error(err.message);
+      throw err;
     }
   }
   async findRecipeAndUpdate(recipeId, userId, patchData, imageLink) {
@@ -244,9 +232,7 @@ class RecipeRepository {
 
       return;
     } catch (err) {
-      if (err instanceof CustomError)
-        throw new CustomError(err.message, err.statusCode);
-      throw new Error(err.message);
+      throw err;
     }
   }
 
@@ -279,9 +265,7 @@ class RecipeRepository {
 
       return coverPhoto;
     } catch (err) {
-      if (err instanceof CustomError)
-        throw new CustomError(err.message, err.statusCode);
-      throw new Error(err.message);
+      throw err;
     }
   }
 }

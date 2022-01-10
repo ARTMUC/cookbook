@@ -13,12 +13,10 @@ class UserRepository {
       if (doc.length !== 0) throw new CustomError("User already exists", 400);
       return;
     } catch (err) {
-      if (err instanceof CustomError)
-        throw new CustomError(err.message, err.statusCode);
-      throw new Error(err.message);
+      throw err;
     }
   }
-  async GetUserByEmail(email) {
+  async getUserByEmail(email) {
     try {
       const [doc] = await mySQLPool.execute(
         "SELECT `id`, `password`, `isEmailConfirmed` FROM `users` WHERE `email` = ?",
@@ -29,35 +27,27 @@ class UserRepository {
       const [user] = doc;
       return user;
     } catch (err) {
-      if (err instanceof CustomError)
-        throw new CustomError(err.message, err.statusCode);
-      throw new Error(err.message);
+      throw err;
     }
   }
-  async GetUserById(id) {
+  async getUserById(id) {
     try {
       const [doc] = await mySQLPool.execute(
         "SELECT `id`, `email`,`isEmailConfirmed` FROM `users` WHERE `id` = ?",
         [id]
       );
-     
+
       if (doc.length === 0)
         throw new CustomError("Wrong email or password", 401);
       const [user] = doc;
 
       return user;
     } catch (err) {
-      if (err instanceof CustomError)
-        throw new CustomError(err.message, err.statusCode);
-      throw new Error(err.message);
+      throw err;
     }
   }
 
-
-
-
-
-  async SaveUser(userInputs) {
+  async saveUser(userInputs) {
     const { email, hashedPassword, emailConfirmationCode } = userInputs;
     try {
       const [{ affectedRows }] = await mySQLPool.execute(
@@ -68,23 +58,19 @@ class UserRepository {
 
       return;
     } catch (err) {
-      if (err instanceof CustomError)
-        throw new CustomError(err.message, err.statusCode);
-      throw new Error(err.message);
+      throw err;
     }
   }
-  async ConfirmUser(confirmationId) {
+  async confirmUser(confirmationId) {
     try {
       const [{ affectedRows }] = await mySQLPool.execute(
         "UPDATE `users` SET `isEmailConfirmed`='1' WHERE `emailConfirmationId` = ?",
         [confirmationId]
       );
-      console.log(affectedRows)
+      console.log(affectedRows);
       return affectedRows;
     } catch (err) {
-      if (err instanceof CustomError)
-        throw new CustomError(err.message, err.statusCode);
-      throw new Error(err.message);
+      throw err;
     }
   }
 }

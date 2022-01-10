@@ -4,7 +4,7 @@ const { UserRepository } = require("../api/userApi/repository/userRepoSQL");
 const passport = require("passport");
 const { verifyPassword } = require("../utils/passwordCrypto");
 
-const Repository = new UserRepository();
+const repository = new UserRepository();
 
 const passportSetup = (app) => {
   const strategy = new LocalStrategy(
@@ -14,7 +14,7 @@ const passportSetup = (app) => {
 
     async (email, password, done) => {
       try {
-        const user = await Repository.GetUserByEmail(email);
+        const user = await repository.getUserByEmail(email);
         await verifyPassword(password, user.password);
         return done(null, user);
       } catch (error) {
@@ -31,7 +31,7 @@ const passportSetup = (app) => {
 
   passport.deserializeUser(async (id, done) => {
     try {
-      const user = await Repository.GetUserById(id);
+      const user = await repository.getUserById(id);
 
       const userInformation = {
         email: user.email,
