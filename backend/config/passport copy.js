@@ -1,3 +1,5 @@
+// changed to passport JWT
+
 // const LocalStrategy = require("passport-local").Strategy;
 // const CustomError = require("../errors/CustomError");
 // const { UserRepository } = require("../api/userApi/repository/userRepoSQL");

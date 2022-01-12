@@ -1,4 +1,6 @@
 const LocalStrategy = require("passport-local").Strategy;
+const JWTstrategy = require("passport-jwt").Strategy;
+const ExtractJWT = require("passport-jwt").ExtractJwt;
 const CustomError = require("../errors/CustomError");
 const { UserRepository } = require("../api/userApi/repository/userRepoSQL");
 const passport = require("passport");
@@ -7,7 +9,7 @@ const { verifyPassword } = require("../utils/passwordCrypto");
 const repository = new UserRepository();
 
 const passportSetup = (app) => {
-  const strategy = new LocalStrategy(
+  const localStrategy = new LocalStrategy(
     {
       usernameField: "email",
     },
@@ -23,31 +25,35 @@ const passportSetup = (app) => {
     }
   );
 
-  passport.use(strategy);
+  const cookieExtractor = (req) => {
+    if (!req.cookies["authToken"])
+      throw new CustomError("you are not logged in", 401);
+    const token = req && req.cookies ? req.cookies["authToken"] : null;
+    return token;
+  };
 
-  passport.serializeUser((user, cb) => {
-    cb(null, user.id);
-  });
-
-  passport.deserializeUser(async (id, done) => {
-    try {
-      const user = await repository.getUserById(id);
-
-      const userInformation = {
-        email: user.email,
-        isEmailConfirmed: user.isEmailConfirmed,
-        id: user.id,
-      };
-      done(null, userInformation);
-    } catch (error) {
-      done(error);
+  const jwtStrategy = new JWTstrategy(
+    {
+      secretOrKey: "jwtsecretchangeitlater",
+      jwtFromRequest: cookieExtractor,
+    },
+    async (token, done) => {
+      try {
+        // console.log(token);
+        if (!token) throw new CustomError("you are not logged in", 401);
+        return done(null, token);
+      } catch (error) {
+        done(error);
+      }
     }
-  });
-
+  );
+  passport.use(localStrategy);
+  passport.use(jwtStrategy);
   app.use(passport.initialize());
-  app.use(passport.session());
 };
 
-const loginLocalStrategyMidd = passport.authenticate("local");
+const loginLocalStrategyMidd = passport.authenticate("local", {
+  session: false,
+});
 
 module.exports = { passportSetup, loginLocalStrategyMidd };

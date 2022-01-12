@@ -100,7 +100,7 @@ const removeRecipe = async (req, res, next) => {
     const { id: userId } = req.user;
     const recipeId = req.params.recipe_id;
 
-    await Service.removeRecipe(recipeId, userId);
+    await service.removeRecipe(recipeId, userId);
 
     res.status(200).json("success - remove");
   } catch (error) {
