@@ -5,7 +5,7 @@ I made this APP to learn React, Express and handling Databases.
 At first I was using Mongo with Mongoose but the switched to SQL (you can still find commented files with queries to Mongoose - left for learning purposes).
 I did a lot of refactoring trying my best to create code that is easy to read. 
 
-# STACK:
+## STACK:
 - React
 - Express
 - MySQL DB (raw queries)
