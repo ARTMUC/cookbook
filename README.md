@@ -2,8 +2,8 @@
 https://cookbook.networkmanager.pl/
 
 you can use guest pass:
-login: 111@xxxyyy.pl
-password: xxx
+- login: 111@xxxyyy.pl
+- password: xxx
 
 # COOKBOOK APP - IT'S A BLOG TYPE APP TO UPLOAD RECIPES
 
